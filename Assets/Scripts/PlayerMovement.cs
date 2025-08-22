@@ -2,7 +2,12 @@
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 5f;
+    [Header("Movimiento")]
+    public float walkSpeed = 5f;
+    public float sprintSpeed = 9f;
+    private float currentSpeed;
+
+    [Header("Cámara y Control")]
     public float mouseSensitivity = 0.5f;
     public float jumpForce = 5f;
     public float gravity = -5f;
@@ -14,15 +19,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
 
+    [Header("Chequeo de suelo")]
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
-    void Start()
+    void Awake()
     {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
         Cursor.lockState = CursorLockMode.Locked;
+        currentSpeed = walkSpeed; // Arranca caminando
     }
 
     void Update()
@@ -35,12 +42,22 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f; // Mantener pegado al suelo
         }
 
+        // --- Sprint ---
+        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
+        {
+            currentSpeed = sprintSpeed;
+        }
+        else
+        {
+            currentSpeed = walkSpeed;
+        }
+
         // --- Movimiento horizontal ---
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * currentSpeed * Time.deltaTime);
 
         // --- Rotación con el mouse ---
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;

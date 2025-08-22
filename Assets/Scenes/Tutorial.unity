@@ -274,10 +274,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 123c62ad7d85d8f47b7b56b8f97a9c67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  mouseSensitivity: 70
-  jumpForce: 6
-  gravity: -30
+  walkSpeed: 6
+  sprintSpeed: 12
+  mouseSensitivity: 250
+  jumpForce: 3
+  gravity: -40
   groundCheck: {fileID: 163188520}
   groundDistance: 0.4
   groundMask:
@@ -295,10 +296,10 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.1
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &189725598
@@ -649,6 +650,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: bb7003623bf2b9a4daa29f8fc70d367b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: bb7003623bf2b9a4daa29f8fc70d367b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 26.3
@@ -695,15 +700,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: bb7003623bf2b9a4daa29f8fc70d367b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: bb7003623bf2b9a4daa29f8fc70d367b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: bb7003623bf2b9a4daa29f8fc70d367b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6400000, guid: bb7003623bf2b9a4daa29f8fc70d367b, type: 3}

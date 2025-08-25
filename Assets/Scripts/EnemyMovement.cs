@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AgentMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {   
     public Transform destino;
     private NavMeshAgent agente;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // 👈 importante para usar TextMeshPro
+using TMPro;
 
 public class PlayerHealthManager : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class PlayerHealthManager : MonoBehaviour
 
     [Header("UI")]
     public Slider healthBar;
-    public TMP_Text healthText; // arrastrá el Text (TMP) acá
+    public TMP_Text healthText; 
 
     void Awake()
     {
@@ -66,6 +66,6 @@ public class PlayerHealthManager : MonoBehaviour
     void Die()
     {
         Debug.Log("Jugador murió.");
-        // reiniciar escena, respawn, etc.
+    
     }
 }

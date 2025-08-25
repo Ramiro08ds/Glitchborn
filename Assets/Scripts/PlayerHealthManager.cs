@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro; // 👈 importante para usar TextMeshPro
 
 public class PlayerHealthManager : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class PlayerHealthManager : MonoBehaviour
     private int currentHealth;
 
     [Header("UI")]
-    public Slider healthBar; // arrastrá acá el Slider de la UI
+    public Slider healthBar;
+    public TMP_Text healthText; // arrastrá el Text (TMP) acá
 
     void Awake()
     {
@@ -27,17 +29,16 @@ public class PlayerHealthManager : MonoBehaviour
             healthBar.maxValue = maxHealth;
             healthBar.value = currentHealth;
         }
+
+        UpdateHealthUI();
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // evita valores negativos
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-        Debug.Log("Jugador recibió daño. Vida: " + currentHealth);
-
-        if (healthBar != null)
-            healthBar.value = currentHealth;
+        UpdateHealthUI();
 
         if (currentHealth <= 0)
         {
@@ -50,15 +51,21 @@ public class PlayerHealthManager : MonoBehaviour
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
+        UpdateHealthUI();
+    }
+
+    private void UpdateHealthUI()
+    {
         if (healthBar != null)
             healthBar.value = currentHealth;
+
+        if (healthText != null)
+            healthText.text = currentHealth + " / " + maxHealth;
     }
 
     void Die()
     {
         Debug.Log("Jugador murió.");
-
+        // reiniciar escena, respawn, etc.
     }
 }
-
-

@@ -6,9 +6,9 @@ public class EnemyAttack : MonoBehaviour
     public float attackCooldown = 1.5f;
     private float lastAttackTime;
 
-    void OnCollisionStay(Collision collision)
+    private void OnTriggerStay(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player") && Time.time > lastAttackTime + attackCooldown)
+        if (other.CompareTag("Player") && Time.time > lastAttackTime + attackCooldown)
         {
             PlayerHealthManager.instance.TakeDamage(damage);
             lastAttackTime = Time.time;

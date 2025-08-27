@@ -65,7 +65,15 @@ public class PlayerHealthManager : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Jugador murió.");
-    
+        Debug.Log("Jugador murió. Intentando llamar a GameManager...");
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.PlayerDied();
+        }
+        else
+        {
+            Debug.LogError("GameManager.instance es NULL");
+        }
     }
+
 }

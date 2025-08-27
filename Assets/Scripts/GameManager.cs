@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Tutorial"); // <-- corregido
     }
 
     public void LoadMenu()
@@ -37,5 +37,11 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Saliendo del juego...");
+    }
+
+    public void PlayerDied()
+    {
+        Debug.Log("Has Muerto");
+        SceneManager.LoadScene("GameOver");
     }
 }

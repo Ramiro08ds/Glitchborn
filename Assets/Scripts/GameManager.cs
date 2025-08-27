@@ -20,7 +20,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
-        SceneManager.LoadScene("Tutorial"); // <-- corregido
+        SceneManager.LoadScene("Tutorial"); 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void LoadMenu()
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour
     public void LoadGameOver()
     {
         SceneManager.LoadScene("GameOver");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void QuitGame()

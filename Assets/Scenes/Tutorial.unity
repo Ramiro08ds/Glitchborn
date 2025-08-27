@@ -397,8 +397,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 8
-  sprintSpeed: 16
-  mouseSensitivity: 300
+  sprintSpeed: 18
+  mouseSensitivity: 1000
   jumpForce: 3
   gravity: -40
   groundCheck: {fileID: 163188520}
@@ -1449,7 +1449,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 10
-  m_Acceleration: 8
+  m_Acceleration: 7
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -1488,8 +1488,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7147c602d3b7de34ba1b9f56c298cf84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  attackCooldown: 1.5
+  damage: 25
+  attackCooldown: 1
 --- !u!1001 &2021621420
 PrefabInstance:
   m_ObjectHideFlags: 0

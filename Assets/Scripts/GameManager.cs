@@ -15,12 +15,16 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+
+        // --- Al iniciar el juego, ir al MainMenu ---
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void LoadGame()
     {
-        SceneManager.LoadScene("Tutorial"); 
+        SceneManager.LoadScene("Tutorial");
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

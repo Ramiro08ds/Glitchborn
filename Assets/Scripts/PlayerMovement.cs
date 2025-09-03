@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController controller;
     private Transform cam;
+    private Animator animator; // 👈 Referencia al Animator
 
     private float xRotation = 0f;
     private Vector3 velocity;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
+        animator = GetComponent<Animator>(); // 👈 Busca el Animator en el mismo objeto
         Cursor.lockState = CursorLockMode.Locked;
         currentSpeed = walkSpeed; // Arranca caminando
     }
@@ -59,6 +61,11 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
+        // --- Animaciones de movimiento ---
+        float speedPercent = new Vector2(x, z).magnitude * (currentSpeed == sprintSpeed ? 2f : 1f);
+        animator.SetFloat("Speed", speedPercent);
+        // 👆 "Speed" controla Idle/Walk/Run en el Animator
+
         // --- Rotación con el mouse ---
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
@@ -73,6 +80,19 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            animator.SetBool("IsJumping", true); // 👈 Activa animación de salto
+        }
+
+        // --- Si está en el suelo, dejar de saltar ---
+        if (isGrounded)
+        {
+            animator.SetBool("IsJumping", false);
+        }
+
+        // --- Ataque (clic izquierdo) ---
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("Attack"); // 👈 Dispara animación de ataque
         }
 
         // --- Aplicar gravedad ---
@@ -80,4 +100,3 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 }
-    

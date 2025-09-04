@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController controller;
     private Transform cam;
-    private Animator animator; // 👈 Referencia al Animator
+    private Animator animator; // 👈 Animator del modelo
 
     private float xRotation = 0f;
     private Vector3 velocity;
@@ -29,9 +29,9 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
-        animator = GetComponent<Animator>(); // 👈 Busca el Animator en el mismo objeto
+        animator = GetComponentInChildren<Animator>(); // 👈 Busca Animator en el hijo (CuerpoPersonaje)
         Cursor.lockState = CursorLockMode.Locked;
-        currentSpeed = walkSpeed; // Arranca caminando
+        currentSpeed = walkSpeed;
     }
 
     void Update()
@@ -41,18 +41,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; // Mantener pegado al suelo
+            velocity.y = -2f;
         }
 
         // --- Sprint ---
         if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
-        {
             currentSpeed = sprintSpeed;
-        }
         else
-        {
             currentSpeed = walkSpeed;
-        }
 
         // --- Movimiento horizontal ---
         float x = Input.GetAxis("Horizontal");
@@ -62,9 +58,10 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(move * currentSpeed * Time.deltaTime);
 
         // --- Animaciones de movimiento ---
-        float speedPercent = new Vector2(x, z).magnitude * (currentSpeed == sprintSpeed ? 2f : 1f);
-        animator.SetFloat("Speed", speedPercent);
-        // 👆 "Speed" controla Idle/Walk/Run en el Animator
+        float moveAmount = new Vector3(x, 0, z).magnitude;
+        float speedValue = moveAmount * currentSpeed;
+        animator.SetFloat("Speed", speedValue);
+        // 👆 Ahora "Speed" llega a 0–5 (walk) o 0–9 (run)
 
         // --- Rotación con el mouse ---
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
@@ -80,20 +77,23 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            animator.SetBool("IsJumping", true); // 👈 Activa animación de salto
+            animator.SetBool("IsJumping", true);
+        }
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            animator.SetBool("IsJumping", true);
+            Invoke("StopJumping", 0.5f); // 👈 espera medio segundo antes de cortar
         }
 
-        // --- Si está en el suelo, dejar de saltar ---
-        if (isGrounded)
+        void StopJumping()
         {
             animator.SetBool("IsJumping", false);
         }
 
-        // --- Ataque (clic izquierdo) ---
+        // --- Ataque ---
         if (Input.GetMouseButtonDown(0))
-        {
-            animator.SetTrigger("Attack"); // 👈 Dispara animación de ataque
-        }
+            animator.SetTrigger("Attack");
 
         // --- Aplicar gravedad ---
         velocity.y += gravity * Time.deltaTime;

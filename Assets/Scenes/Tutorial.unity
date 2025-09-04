@@ -491,7 +491,6 @@ GameObject:
   - component: {fileID: 189725600}
   - component: {fileID: 189725602}
   - component: {fileID: 189725598}
-  - component: {fileID: 189725604}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -659,25 +658,6 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
---- !u!95 &189725604
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189725595}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fe6881871ebfc3540b94961a8271cbee, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &266606721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2187,6 +2167,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: fe6881871ebfc3540b94961a8271cbee, type: 2}
+    - target: {fileID: 9500000, guid: 79a953dbca2362e46b259aa78747e848, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79a953dbca2362e46b259aa78747e848, type: 3}
 --- !u!1 &1761050357

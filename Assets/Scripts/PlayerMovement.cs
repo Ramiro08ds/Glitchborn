@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController controller;
     private Transform cam;
-    private Animator animator; // 👈 Animator del modelo
+    private Animator animator; 
 
     private float xRotation = 0f;
     private Vector3 velocity;
@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
-        animator = GetComponentInChildren<Animator>(); // 👈 Busca Animator en el hijo (CuerpoPersonaje)
+        animator = GetComponentInChildren<Animator>(); 
         Cursor.lockState = CursorLockMode.Locked;
         currentSpeed = walkSpeed;
     }
@@ -61,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
         float moveAmount = new Vector3(x, 0, z).magnitude;
         float speedValue = moveAmount * currentSpeed;
         animator.SetFloat("Speed", speedValue);
-        // 👆 Ahora "Speed" llega a 0–5 (walk) o 0–9 (run)
 
         // --- Rotación con el mouse ---
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
@@ -78,17 +77,7 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
             animator.SetBool("IsJumping", true);
-        }
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            animator.SetBool("IsJumping", true);
-            Invoke("StopJumping", 0.5f); // 👈 espera medio segundo antes de cortar
-        }
-
-        void StopJumping()
-        {
-            animator.SetBool("IsJumping", false);
+            Invoke("StopJumping", 0.5f);
         }
 
         // --- Ataque ---
@@ -98,5 +87,10 @@ public class PlayerMovement : MonoBehaviour
         // --- Aplicar gravedad ---
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    void StopJumping()
+    {
+        animator.SetBool("IsJumping", false);
     }
 }

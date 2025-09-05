@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
+    private bool isAttacking = false;
+    public float attackDuration = 0.8f;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -79,10 +82,13 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("IsJumping", true);
             Invoke("StopJumping", 0.5f);
         }
-
         // --- Ataque ---
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !isAttacking) 
+        {
+            isAttacking = true;
             animator.SetTrigger("Attack");
+            Invoke("ResetAttack", attackDuration);
+        }
 
         // --- Aplicar gravedad ---
         velocity.y += gravity * Time.deltaTime;
@@ -92,5 +98,9 @@ public class PlayerMovement : MonoBehaviour
     void StopJumping()
     {
         animator.SetBool("IsJumping", false);
+    }
+    void ResetAttack()
+    {
+        isAttacking = false;
     }
 }

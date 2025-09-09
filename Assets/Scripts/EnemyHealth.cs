@@ -5,7 +5,7 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 100;
     private int currentHealth;
 
-    public EnemyHealthBar healthBar; // 👈 referencia a la barra
+    public EnemyHealthBar healthBar; // referencia a la barra
 
     void Start()
     {
@@ -19,8 +19,12 @@ public class EnemyHealth : MonoBehaviour
                 Debug.Log("[EnemyHealth] HealthBar asignada automáticamente desde hijos.");
         }
 
+        // 👉 asignar target de la barra al enemigo
         if (healthBar != null)
+        {
+            healthBar.target = transform; // importante
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
+        }
     }
 
     public void TakeDamage(int amount)

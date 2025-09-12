@@ -3,13 +3,16 @@ using UnityEngine.UI;
 
 public class EnemyHealthBar : MonoBehaviour
 {
+    [Header("References")]
     public Image healthFill;
     public Transform target;
-    public Vector3 offset = new Vector3(0, 2f, 0);
     public Camera cam;
 
-    Canvas canvas;
-    RectTransform rt;
+    [Header("Settings")]
+    public Vector3 offset = new Vector3(0, 4f, 0);
+
+    private Canvas canvas;
+    private RectTransform rt;
 
     void Awake()
     {
@@ -21,24 +24,18 @@ public class EnemyHealthBar : MonoBehaviour
     {
         if (cam == null) cam = Camera.main;
 
-        if (canvas == null)
-            canvas = GetComponentInChildren<Canvas>(true);
-
-        // asegurarse de que el canvas esté en World Space
         if (canvas != null)
         {
             canvas.renderMode = RenderMode.WorldSpace;
-            canvas.worldCamera = cam; // importante
+            canvas.worldCamera = cam;
         }
 
         if (rt != null)
         {
-            // ajustar tamaño si es 0
-            if (Mathf.Approximately(rt.sizeDelta.x, 0) || Mathf.Approximately(rt.sizeDelta.y, 0))
+            if (rt.sizeDelta == Vector2.zero)
                 rt.sizeDelta = new Vector2(150, 30);
 
-            if (transform.localScale.magnitude < 0.0001f)
-                transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            transform.localScale = Vector3.one * 0.01f;
         }
 
         if (healthFill == null)
@@ -57,27 +54,18 @@ public class EnemyHealthBar : MonoBehaviour
         }
 
         if (healthFill != null)
-        {
-            healthFill.enabled = true;
             healthFill.fillAmount = 1f;
-        }
-
-        gameObject.SetActive(true);
     }
 
     void LateUpdate()
     {
-        if (target == null) return;
+        if (target == null || cam == null) return;
 
-        // si el canvas es hijo del target, usar localPosition
-        if (transform.IsChildOf(target))
-            transform.localPosition = offset;
-        else
-            transform.position = target.position + offset;
+        // Posición sobre la cabeza con offset
+        transform.position = target.position + offset;
 
-        // siempre mirar a la cámara
-        if (cam != null)
-            transform.forward = transform.position - cam.transform.position;
+        // Que siempre mire a la cámara
+        transform.rotation = Quaternion.LookRotation(transform.position - cam.transform.position);
     }
 
     public void UpdateHealthBar(int currentHealth, int maxHealth)
@@ -85,19 +73,6 @@ public class EnemyHealthBar : MonoBehaviour
         if (healthFill == null) return;
 
         float pct = Mathf.Clamp01((float)currentHealth / maxHealth);
-
-        if (healthFill.type == Image.Type.Filled)
-            healthFill.fillAmount = pct;
-        else
-        {
-            RectTransform bg = healthFill.transform.parent.GetComponent<RectTransform>();
-            RectTransform fillRt = healthFill.rectTransform;
-            if (bg != null)
-            {
-                float w = bg.rect.width * pct;
-                fillRt.sizeDelta = new Vector2(w, fillRt.sizeDelta.y);
-            }
-        }
+        healthFill.fillAmount = pct;
     }
 }
-

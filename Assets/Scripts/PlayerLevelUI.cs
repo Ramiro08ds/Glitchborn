@@ -4,45 +4,71 @@ using TMPro;
 
 public class PlayerLevelUI : MonoBehaviour
 {
-    [Header("References")]
-    public PlayerLevelSystem player;
+    public GameObject panel;
 
-    [Header("Texts")]
     public TextMeshProUGUI txtLevel;
-    public TextMeshProUGUI txtSkillPoints;
+    public TextMeshProUGUI txtXP;
+    public Image xpBar; // 👈 ahora es Image
+
     public TextMeshProUGUI txtStrength;
     public TextMeshProUGUI txtMaxHealth;
-    public TextMeshProUGUI txtXPNumbers; // Para mostrar "XP: 20/40" encima de la barra
+    public TextMeshProUGUI txtSkillPoints;
 
-    [Header("XP Bar")]
-    public Image xpFill; // La imagen de relleno (XPFill)
-
-    [Header("Buttons")]
     public Button btnAddStrength;
     public Button btnAddMaxHealth;
 
+    public PlayerLevelSystem playerLevel;
+    public PlayerHealthManager playerHealthManager;
+
+    public int healthIncreaseAmount = 10;
+
     void Start()
     {
-        // Conectar botones
-        btnAddStrength.onClick.AddListener(() => player.UpgradeStrength());
-        btnAddMaxHealth.onClick.AddListener(() => player.UpgradeMaxHealth(10)); // +10 vida por punto
+        panel.SetActive(false);
+        btnAddStrength.onClick.AddListener(AddStrength);
+        btnAddMaxHealth.onClick.AddListener(AddMaxHealth);
+        UpdateUI();
     }
 
     void Update()
     {
-        if (player == null) return;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            panel.SetActive(!panel.activeSelf);
+            UpdateUI();
+        }
+    }
 
-        // Textos básicos
-        txtLevel.text = "Nivel: " + player.currentLevel;
-        txtSkillPoints.text = "Skill Points: " + player.skillPoints;
-        txtStrength.text = "Fuerza: " + player.strength;
-        txtMaxHealth.text = "Vida Máx: " + player.maxHealth;
+    void AddStrength()
+    {
+        playerLevel.UpgradeStrength();
+        UpdateUI();
+    }
 
-        // Barra de XP
-        float xpPercent = (float)player.currentXP / player.xpToNextLevel;
-        xpFill.fillAmount = xpPercent; // llena la barra
+    void AddMaxHealth()
+    {
+        if (playerLevel.skillPoints > 0)
+        {
+            playerLevel.UpgradeMaxHealth(healthIncreaseAmount);
+            if (playerHealthManager != null)
+            {
+                playerHealthManager.maxHealth = playerLevel.maxHealth;
+                playerHealthManager.Heal(playerHealthManager.maxHealth);
+            }
+            UpdateUI();
+        }
+    }
 
-        // Números encima de la barra
-        txtXPNumbers.text = $"XP: {player.currentXP}/{player.xpToNextLevel}";
+    void UpdateUI()
+    {
+        txtLevel.text = "Nivel: " + playerLevel.currentLevel;
+        txtXP.text = $"XP: {playerLevel.currentXP} / {playerLevel.xpToNextLevel}";
+
+        if (xpBar != null)
+            xpBar.fillAmount = (float)playerLevel.currentXP / playerLevel.xpToNextLevel;
+
+        txtStrength.text = "Fuerza: " + playerLevel.strength;
+        txtMaxHealth.text = "Vida Máx: " + playerLevel.maxHealth;
+        txtSkillPoints.text = "Puntos: " + playerLevel.skillPoints;
     }
 }

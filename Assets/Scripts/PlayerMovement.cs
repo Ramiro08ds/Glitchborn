@@ -28,6 +28,9 @@ public class PlayerMovement : MonoBehaviour
     private bool isAttacking = false;
     public float attackDuration = 0.8f;
 
+    [Header("Referencias")]
+    public PlayerLevelUI menu; // ⚡ Arrastrar tu PlayerLevelUI aquí en el inspector
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -39,6 +42,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // --- ⚡ Si el menú está abierto, no procesar inputs ---
+        if (menu != null && menu.menuAbierto)
+        {
+            // Detener movimiento, animaciones de velocidad y rotación
+            animator.SetFloat("Speed", 0);
+            return;
+        }
+
         // --- Detección de suelo ---
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -82,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("IsJumping", true);
             Invoke("StopJumping", 0.5f);
         }
+
         // --- Ataque ---
         if (Input.GetMouseButtonDown(0) && !isAttacking) 
         {
@@ -99,6 +111,7 @@ public class PlayerMovement : MonoBehaviour
     {
         animator.SetBool("IsJumping", false);
     }
+
     void ResetAttack()
     {
         isAttacking = false;

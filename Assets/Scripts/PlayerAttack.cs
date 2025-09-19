@@ -3,16 +3,28 @@
 public class PlayerAttack : MonoBehaviour
 {
     [Header("Configuración del Ataque")]
-    public float attackRange = 2f;       // rango de alcance del golpe
-    public float attackCooldown = 1.5f; // tiempo entre golpes
-    public int attackDamage = 20;       // daño del golpe
-    public LayerMask enemyLayer;        // capa de los enemigos
+    public float attackRange = 2f;
+    public float attackCooldown = 1.5f;
+    public LayerMask enemyLayer;
+
+    [Header("Referencias")]
+    public PlayerLevelUI menu; 
+    private PlayerLevelSystem playerLevel; 
 
     private bool canAttack = true;
 
+    void Start()
+    {
+  
+        playerLevel = GetComponent<PlayerLevelSystem>();
+    }
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && canAttack) // click izquierdo
+        if (menu != null && menu.menuAbierto)
+            return;
+
+        if (Input.GetMouseButtonDown(0) && canAttack)
         {
             Attack();
         }
@@ -22,20 +34,20 @@ public class PlayerAttack : MonoBehaviour
     {
         canAttack = false;
 
-        // Detectar enemigos cerca en un radio
+        // Daño en base a la fuerza del PlayerLevelSystem
+        int damage = 2 + playerLevel.strength * 1;
+
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position + transform.forward, attackRange, enemyLayer);
 
         foreach (Collider enemy in hitEnemies)
         {
-            // Ver si el enemigo tiene un script de vida
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
             if (health != null)
             {
-                health.TakeDamage(attackDamage);
+                health.TakeDamage(damage);
             }
         }
 
-        // Reiniciar cooldown
         Invoke(nameof(ResetAttack), attackCooldown);
     }
 
@@ -44,10 +56,8 @@ public class PlayerAttack : MonoBehaviour
         canAttack = true;
     }
 
-
     void OnDrawGizmosSelected()
     {
-        // Dibuja el rango en la escena para ver hasta dónde llega el golpe
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position + transform.forward, attackRange);
     }

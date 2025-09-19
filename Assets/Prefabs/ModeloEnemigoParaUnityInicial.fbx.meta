@@ -1,20 +1,25 @@
 fileFormatVersion: 2
-guid: 543157af8d626b146bf8ba0da613809f
+guid: bddb67d1043b8bd46a7e6f0902e018a4
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: No Name
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: No Name
-    second: {fileID: 2100000, guid: 853e84f1c1e49fd4ea87d0fec6f5da49, type: 2}
+    100000: Alas
+    100002: //RootNode
+    400000: Alas
+    400002: //RootNode
+    2100000: Hueso.001
+    2100002: Alas Boss(partre roja.001
+    2100004: Piel Negra.001
+    2100006: Piel Negra
+    2100008: Alas Boss(partre roja
+    2300000: Alas
+    2300002: //RootNode
+    3300000: Alas
+    3300002: //RootNode
+    4300000: Boss.001
+    4300002: Alas
+    2186277476908879412: ImportLogs
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0

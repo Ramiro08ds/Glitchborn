@@ -8,7 +8,7 @@ public class PlayerLevelUI : MonoBehaviour
 
     public TextMeshProUGUI txtLevel;
     public TextMeshProUGUI txtXP;
-    public Image xpBar; // 👈 ahora es Image
+    public Image xpBar;
 
     public TextMeshProUGUI txtStrength;
     public TextMeshProUGUI txtMaxHealth;
@@ -22,6 +22,9 @@ public class PlayerLevelUI : MonoBehaviour
 
     public int healthIncreaseAmount = 10;
 
+    // ⚡ Para bloquear acciones del jugador:
+    public bool menuAbierto = false; 
+
     void Start()
     {
         panel.SetActive(false);
@@ -34,9 +37,36 @@ public class PlayerLevelUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            panel.SetActive(!panel.activeSelf);
-            UpdateUI();
+            // Alterna menú
+            if (menuAbierto)
+                CerrarMenu();
+            else
+                AbrirMenu();
         }
+    }
+
+    void AbrirMenu()
+    {
+        panel.SetActive(true);
+        UpdateUI();
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        menuAbierto = true;
+    }
+
+    void CerrarMenu()
+    {
+        panel.SetActive(false);
+
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        menuAbierto = false;
     }
 
     void AddStrength()

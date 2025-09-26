@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HitboxEnemy : MonoBehaviour
 {
@@ -10,17 +8,15 @@ public class HitboxEnemy : MonoBehaviour
     [Header("Multiplicador de daño (opcional)")]
     public float damageMultiplier = 1f;
 
-    // Detecta colisiones con el ataque del jugador
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        // Si el objeto tiene el tag del arma del jugador
-        if (collision.gameObject.CompareTag("PlayerWeapon"))
+        if (other.CompareTag("PlayerWeapon"))
         {
             if (enemyHealth != null)
             {
-                // Daño base multiplicado por el multiplicador
                 int damage = Mathf.RoundToInt(10 * damageMultiplier);
                 enemyHealth.TakeDamage(damage);
+                Debug.Log("HitboxEnemy recibió golpe por " + damage);
             }
         }
     }

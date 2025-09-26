@@ -8,14 +8,13 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask enemyLayer;
 
     [Header("Referencias")]
-    public PlayerLevelUI menu; 
-    private PlayerLevelSystem playerLevel; 
+    public PlayerLevelUI menu;
+    private PlayerLevelSystem playerLevel;
 
     private bool canAttack = true;
 
     void Start()
     {
-  
         playerLevel = GetComponent<PlayerLevelSystem>();
     }
 
@@ -37,14 +36,17 @@ public class PlayerAttack : MonoBehaviour
         // Daño en base a la fuerza del PlayerLevelSystem
         int damage = 2 + playerLevel.strength * 1;
 
+        // Busca colliders en rango
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position + transform.forward, attackRange, enemyLayer);
 
         foreach (Collider enemy in hitEnemies)
         {
-            EnemyHealth health = enemy.GetComponent<EnemyHealth>();
+            // Siempre busca el EnemyHealth en el padre (por si golpea la hitbox)
+            EnemyHealth health = enemy.GetComponentInParent<EnemyHealth>();
             if (health != null)
             {
                 health.TakeDamage(damage);
+                Debug.Log("Golpeé a: " + health.name + " por " + damage + " de daño");
             }
         }
 

@@ -8,10 +8,14 @@ public class EnemyAttack : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && Time.time > lastAttackTime + attackCooldown)
+        if (other.CompareTag("Player"))
         {
-            PlayerHealthManager.instance.TakeDamage(damage);
-            lastAttackTime = Time.time;
+            if (Time.time > lastAttackTime + attackCooldown)
+            {
+                PlayerHealthManager.instance.TakeDamage(damage);
+                Debug.Log("El enemigo hizo daño al Player: " + damage);
+                lastAttackTime = Time.time;
+            }
         }
     }
 }

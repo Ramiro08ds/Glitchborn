@@ -12,6 +12,9 @@ public class PlayerLevelSystem : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth = 100;
 
+    public static PlayerLevelSystem Instance;
+
+
     [Header("XP Settings")]
     public int baseXPPerKill = 1; // XP base por enemigo
     public float xpScaling = 1.5f; // Multiplicador de XP a partir de nivel 11
@@ -20,7 +23,10 @@ public class PlayerLevelSystem : MonoBehaviour
     {
         CalculateXPToNextLevel();
     }
-
+    private void Awake()
+    {
+        Instance = this;
+    }
     public void GainXP(int amount)
     {
         currentXP += amount;

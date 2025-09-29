@@ -1943,6 +1943,26 @@ MonoBehaviour:
   smoothSpeed: 10
   minY: -30
   maxY: 60
+--- !u!1 &609895348 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: b1dab3f952f375346981d167fa5761ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 718179516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &609895350
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609895348}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300000, guid: b1dab3f952f375346981d167fa5761ae, type: 3}
 --- !u!1 &625250345
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,13 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
     [Header("Configuración del Ataque")]
-    public float attackRange = 2f;
-    public float attackCooldown = 1.5f;
+    public float attackRange = 1.2f;          // radio del golpe
+    public float attackCooldown = 1.0f;       // tiempo entre ataques
+    public float delayBeforeHit = 0.12f;      // delay para sincronizar con la animación
     public LayerMask enemyLayer;
 
     [Header("Referencias")]
+    public Transform hitPoint;                // Empty en la punta de la espada
     public PlayerLevelUI menu;
     private PlayerLevelSystem playerLevel;
 
@@ -25,42 +29,47 @@ public class PlayerAttack : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && canAttack)
         {
-            Attack();
+            StartCoroutine(Attack());
         }
     }
 
-    void Attack()
+    IEnumerator Attack()
     {
         canAttack = false;
+
+        // Espera un poco para que coincida con el frame del golpe
+        yield return new WaitForSeconds(delayBeforeHit);
 
         // Daño en base a la fuerza del PlayerLevelSystem
         int damage = 2 + playerLevel.strength * 1;
 
-        // Busca colliders en rango
-        Collider[] hitEnemies = Physics.OverlapSphere(transform.position + transform.forward, attackRange, enemyLayer);
+        // Busca colliders en rango desde el punto de impacto
+        Collider[] hitEnemies = Physics.OverlapSphere(hitPoint.position, attackRange, enemyLayer);
+
+        // Evita golpear varias veces al mismo enemigo si tiene más de un collider
+        HashSet<EnemyHealth> damaged = new HashSet<EnemyHealth>();
 
         foreach (Collider enemy in hitEnemies)
         {
-            // Siempre busca el EnemyHealth en el padre (por si golpea la hitbox)
             EnemyHealth health = enemy.GetComponentInParent<EnemyHealth>();
-            if (health != null)
+            if (health != null && !damaged.Contains(health))
             {
                 health.TakeDamage(damage);
+                damaged.Add(health);
                 Debug.Log("Golpeé a: " + health.name + " por " + damage + " de daño");
             }
         }
 
-        Invoke(nameof(ResetAttack), attackCooldown);
-    }
-
-    void ResetAttack()
-    {
+        yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
     }
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + transform.forward, attackRange);
+        if (hitPoint != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(hitPoint.position, attackRange);
+        }
     }
 }

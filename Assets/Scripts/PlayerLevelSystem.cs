@@ -32,7 +32,7 @@ public class PlayerLevelSystem : MonoBehaviour
     void LevelUp()
     {
         currentLevel++;
-        skillPoints++;
+        skillPoints += 2;
         xpToNextLevel = Mathf.RoundToInt(xpToNextLevel * 1.2f);
         Debug.Log("¡Subiste de nivel! Nivel: " + currentLevel + ", SkillPoints: " + skillPoints);
     }

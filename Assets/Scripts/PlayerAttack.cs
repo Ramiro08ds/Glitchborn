@@ -6,7 +6,7 @@ public class PlayerAttack : MonoBehaviour
     [Header("Configuración del Ataque")]
     public float attackCooldown = 1.0f;
     public float delayBeforeHit = 0.12f;
-    public float hitboxActiveTime = 0.18f;
+    public float hitboxActiveTime = 0.3f;
 
     [Header("Referencias")]
     public SwordHitbox swordHitbox;   

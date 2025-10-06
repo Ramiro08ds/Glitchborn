@@ -7,18 +7,18 @@ public class EnemyHealth : MonoBehaviour
     private int currentHealth;
 
     [Header("Rewards")]
-    public int xpReward = 1;    // XP que da al morir
-    public int healOnKill = 20; // Vida que le da al player al morir
+    public int xpReward = 1;   
+    public int healOnKill = 20;
 
     [Header("References")]
     public EnemyHealthBar healthBar;
-    public PlayerLevelSystem player; // 👈 referencia al sistema del player
+    public PlayerLevelSystem player;
 
     void Start()
     {
         currentHealth = maxHealth;
 
-        // Si no está asignada la barra, la busca en los hijos
+     
         if (healthBar == null)
         {
             healthBar = GetComponentInChildren<EnemyHealthBar>();
@@ -26,7 +26,7 @@ public class EnemyHealth : MonoBehaviour
                 Debug.Log("[EnemyHealth] HealthBar asignada automáticamente desde hijos.");
         }
 
-        // Asignar target a la barra
+
         if (healthBar != null)
         {
             healthBar.target = transform;

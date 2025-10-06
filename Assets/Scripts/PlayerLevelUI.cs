@@ -20,10 +20,9 @@ public class PlayerLevelUI : MonoBehaviour
     public PlayerLevelSystem playerLevel;
     public PlayerHealthManager playerHealthManager;
 
-    public int healthIncreaseAmount = 10;
+    public int healthIncreasePerPoint = 3; 
 
-    // ⚡ Para bloquear acciones del jugador:
-    public bool menuAbierto = false; 
+    public bool menuAbierto = false;
 
     void Start()
     {
@@ -37,11 +36,8 @@ public class PlayerLevelUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // Alterna menú
-            if (menuAbierto)
-                CerrarMenu();
-            else
-                AbrirMenu();
+            if (menuAbierto) CerrarMenu();
+            else AbrirMenu();
         }
     }
 
@@ -49,23 +45,18 @@ public class PlayerLevelUI : MonoBehaviour
     {
         panel.SetActive(true);
         UpdateUI();
-
         Time.timeScale = 0f;
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
         menuAbierto = true;
     }
 
     void CerrarMenu()
     {
         panel.SetActive(false);
-
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
         menuAbierto = false;
     }
 
@@ -77,14 +68,14 @@ public class PlayerLevelUI : MonoBehaviour
 
     void AddMaxHealth()
     {
-        if (playerLevel.skillPoints > 0)
+        if (playerLevel.skillPoints > 0 && playerHealthManager != null)
         {
-            playerLevel.UpgradeMaxHealth(healthIncreaseAmount);
-            if (playerHealthManager != null)
-            {
-                playerHealthManager.maxHealth = playerLevel.maxHealth;
-                playerHealthManager.Heal(playerHealthManager.maxHealth);
-            }
+            playerLevel.UpgradeMaxHealth(); 
+
+            // aumenta maxHealth y currentHealth proporcionalmente
+            playerHealthManager.MaxHealth += healthIncreasePerPoint;
+            playerHealthManager.CurrentHealth += healthIncreasePerPoint;
+
             UpdateUI();
         }
     }
@@ -98,7 +89,7 @@ public class PlayerLevelUI : MonoBehaviour
             xpBar.fillAmount = (float)playerLevel.currentXP / playerLevel.xpToNextLevel;
 
         txtStrength.text = "Fuerza: " + playerLevel.strength;
-        txtMaxHealth.text = "Vida Máx: " + playerLevel.maxHealth;
+        txtMaxHealth.text = "Vida Máx: " + playerHealthManager.MaxHealth;
         txtSkillPoints.text = "Puntos: " + playerLevel.skillPoints;
     }
 }

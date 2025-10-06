@@ -12,7 +12,7 @@ public class PlayerHealthManager : MonoBehaviour
 
     [Header("UI")]
     public Slider healthBar;
-    public TMP_Text healthText; 
+    public TMP_Text healthText;
 
     void Awake()
     {
@@ -33,24 +33,42 @@ public class PlayerHealthManager : MonoBehaviour
         UpdateHealthUI();
     }
 
+
+    public int CurrentHealth
+    {
+        get { return currentHealth; }
+        set
+        {
+            currentHealth = Mathf.Clamp(value, 0, maxHealth);
+            UpdateHealthUI();
+        }
+    }
+
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+        set
+        {
+            maxHealth = value;
+            UpdateHealthUI();
+        }
+    }
+
+
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
         UpdateHealthUI();
 
         if (currentHealth <= 0)
-        {
             Die();
-        }
     }
 
     public void Heal(int amount)
     {
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
         UpdateHealthUI();
     }
 
@@ -67,13 +85,8 @@ public class PlayerHealthManager : MonoBehaviour
     {
         Debug.Log("Jugador murió. Intentando llamar a GameManager...");
         if (GameManager.instance != null)
-        {
             GameManager.instance.PlayerDied();
-        }
         else
-        {
             Debug.LogError("GameManager.instance es NULL");
-        }
     }
-
 }

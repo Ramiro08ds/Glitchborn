@@ -26,10 +26,11 @@ public class AttackRanged : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
 
         if (player == null)
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+            player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         // Crear y configurar el LineRenderer
         lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
         lineRenderer.startWidth = telegraphWidth;
         lineRenderer.endWidth = telegraphWidth;
         lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
@@ -43,7 +44,6 @@ public class AttackRanged : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // Si está lejos, lo persigue
         if (distance > attackRange)
         {
             agent.isStopped = false;
@@ -52,7 +52,6 @@ public class AttackRanged : MonoBehaviour
         }
         else
         {
-            // Si está en rango, se detiene y mira al jugador
             agent.isStopped = true;
             transform.LookAt(player.position);
 
@@ -66,30 +65,27 @@ public class AttackRanged : MonoBehaviour
 
     private IEnumerator TelegraphAndShoot()
     {
-        // Verificar si hay línea de visión (no dispara si hay obstáculos)
+        if (firePoint == null || player == null)
+            yield break;
+
+        // Línea de visión
         RaycastHit hit;
         Vector3 directionToPlayer = (player.position - firePoint.position).normalized;
-
         if (Physics.Raycast(firePoint.position, directionToPlayer, out hit, attackRange))
         {
             if (!hit.collider.CompareTag("Player"))
-            {
-                yield break; // no ve al jugador → no dispara
-            }
+                yield break;
         }
 
-        // Mostrar línea roja de advertencia
+        // Mostrar línea roja
         lineRenderer.enabled = true;
 
         float elapsed = 0f;
         while (elapsed < attackCooldown)
         {
             elapsed += Time.deltaTime;
-
-            // Actualiza las posiciones de la línea cada frame
             lineRenderer.SetPosition(0, firePoint.position);
             lineRenderer.SetPosition(1, player.position);
-
             yield return null;
         }
 
@@ -99,13 +95,43 @@ public class AttackRanged : MonoBehaviour
 
     private void Shoot()
     {
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        if (projectilePrefab == null || firePoint == null || player == null) return;
 
         Vector3 direction = (player.position - firePoint.position).normalized;
-        rb.velocity = direction * projectileSpeed;
+        Vector3 spawnPos = firePoint.position + direction * 0.35f; // pequeño offset
+        Quaternion rot = Quaternion.LookRotation(direction);
+
+        GameObject projectile = Instantiate(projectilePrefab, spawnPos, rot);
+        if (projectile == null) return;
+
+        // Asignar layer EnemyProjectile si existe
+        int projLayer = LayerMask.NameToLayer("EnemyProjectile");
+        if (projLayer != -1)
+            projectile.layer = projLayer;
+
+        // Ignorar colisiones con todos los colliders del enemigo
+        Collider projectileCollider = projectile.GetComponent<Collider>();
+        Collider[] enemyColliders = GetComponentsInChildren<Collider>();
+        if (projectileCollider != null)
+        {
+            foreach (var col in enemyColliders)
+                Physics.IgnoreCollision(projectileCollider, col, true);
+        }
+
+        // Rigidbody y velocidad
+        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.None;
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            rb.velocity = direction * projectileSpeed;
+        }
+        else
+        {
+            Debug.LogWarning("[AttackRanged] Projectile no tiene Rigidbody!", this);
+        }
 
         Destroy(projectile, 5f);
     }
-
 }

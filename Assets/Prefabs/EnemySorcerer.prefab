@@ -94,6 +94,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
@@ -352,8 +354,8 @@ MonoBehaviour:
     type: 3}
   firePoint: {fileID: 8711752488359976544}
   attackRange: 10
-  attackCooldown: 1.5
-  projectileSpeed: 15
+  attackCooldown: 3
+  projectileSpeed: 12
   telegraphColor: {r: 1, g: 0, b: 0, a: 1}
   telegraphWidth: 0.05
 --- !u!114 &1629567358221768795
@@ -471,6 +473,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 3
   m_PreserveAspect: 0
@@ -564,6 +568,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+    m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!64 &7336134535776196171
 MeshCollider:
   m_ObjectHideFlags: 0

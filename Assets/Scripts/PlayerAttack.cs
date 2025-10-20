@@ -9,7 +9,7 @@ public class PlayerAttack : MonoBehaviour
     public float hitboxActiveTime = 0.3f;
 
     [Header("Referencias")]
-    public SwordHitbox swordHitbox;   
+    public SwordHitbox swordHitbox;
     public PlayerLevelUI menu;
     private PlayerLevelSystem playerLevel;
     private bool canAttack = true;
@@ -36,19 +36,19 @@ public class PlayerAttack : MonoBehaviour
     {
         canAttack = false;
 
-
+        // Espera antes de activar el golpe (sincronizar con animación)
         yield return new WaitForSeconds(delayBeforeHit);
 
-
+        // Activa el hitbox
         swordHitbox.Enable();
 
-
+        // Duración del golpe
         yield return new WaitForSeconds(hitboxActiveTime);
 
-
+        // Desactiva el hitbox
         swordHitbox.Disable();
 
-
+        // Cooldown antes del próximo ataque
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
     }

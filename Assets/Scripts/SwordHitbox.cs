@@ -21,14 +21,12 @@ public class SwordHitbox : MonoBehaviour
         col.enabled = false;
     }
 
-    // Llamar al comenzar la ventana de golpe
     public void Enable()
     {
         damagedThisSwing.Clear();
         col.enabled = true;
     }
 
-    // Llamar al terminar la ventana de golpe
     public void Disable()
     {
         col.enabled = false;
@@ -43,10 +41,17 @@ public class SwordHitbox : MonoBehaviour
 
         if (damagedThisSwing.Contains(eh)) return;
 
-        int damage = owner.GetDamage(); // obtiene daño actual del PlayerAttack
+        int damage = owner.GetDamage();
         eh.TakeDamage(damage);
-        damagedThisSwing.Add(eh);
 
+        // 💥 Feedback visual y sensorial
+        if (HitFeedback.Instance != null)
+        {
+            HitFeedback.Instance.PlayHitFeedback(other.transform.position);
+            HitFeedback.Instance.StartCoroutine(HitFeedback.Instance.HitStop(0.04f));
+        }
+
+        damagedThisSwing.Add(eh);
         Debug.Log($"SwordHitbox: golpeé a {eh.name} por {damage} de daño");
     }
 }

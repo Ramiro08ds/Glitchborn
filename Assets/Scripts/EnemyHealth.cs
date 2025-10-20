@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -7,25 +8,28 @@ public class EnemyHealth : MonoBehaviour
     private int currentHealth;
 
     [Header("Rewards")]
-    public int xpReward = 1;   
+    public int xpReward = 1;
     public int healOnKill = 20;
 
     [Header("References")]
     public EnemyHealthBar healthBar;
     public PlayerLevelSystem player;
 
+    [Header("Feedback")]
+    public Renderer enemyRenderer;
+    public Color hitColor = Color.red;
+    public float flashDuration = 0.1f;
+    public float knockbackForce = 3f;
+
     void Start()
     {
         currentHealth = maxHealth;
 
-     
         if (healthBar == null)
-        {
             healthBar = GetComponentInChildren<EnemyHealthBar>();
-            if (healthBar != null)
-                Debug.Log("[EnemyHealth] HealthBar asignada automáticamente desde hijos.");
-        }
 
+        if (enemyRenderer == null)
+            enemyRenderer = GetComponentInChildren<Renderer>();
 
         if (healthBar != null)
         {
@@ -42,25 +46,39 @@ public class EnemyHealth : MonoBehaviour
         if (healthBar != null)
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
 
+        // Efectos visuales y físicos
+        StartCoroutine(FlashDamage());
+        StartCoroutine(ApplyKnockback());
+
         if (currentHealth <= 0)
             Die();
+    }
+
+    IEnumerator FlashDamage()
+    {
+        if (enemyRenderer == null) yield break;
+        Material mat = enemyRenderer.material;
+        Color original = mat.color;
+        mat.color = hitColor;
+        yield return new WaitForSeconds(flashDuration);
+        mat.color = original;
+    }
+
+    IEnumerator ApplyKnockback()
+    {
+        if (Camera.main == null) yield break;
+        Vector3 dir = (transform.position - Camera.main.transform.position).normalized;
+        transform.position += dir * knockbackForce * Time.deltaTime;
+        yield return null;
     }
 
     void Die()
     {
         Debug.Log(gameObject.name + " murió!");
 
-        // Dar XP + curar al player
         if (player != null)
-        {
             player.EnemyKilled(xpReward, healOnKill);
-        }
-        else
-        {
-            Debug.LogWarning("[EnemyHealth] No se asignó PlayerLevelSystem. No se dará XP/curación.");
-        }
 
-        // Destruir al enemigo
         Destroy(gameObject);
     }
 }

@@ -10,22 +10,17 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Referencias")]
     public SwordHitbox swordHitbox;
-    public PlayerLevelUI menu;
-    private PlayerLevelSystem playerLevel;
+
     private bool canAttack = true;
 
     void Start()
     {
-        playerLevel = GetComponent<PlayerLevelSystem>();
         if (swordHitbox != null)
             swordHitbox.owner = this;
     }
 
     void Update()
     {
-        if (menu != null && menu.menuAbierto)
-            return;
-
         if (Input.GetMouseButtonDown(0) && canAttack)
         {
             StartCoroutine(Attack());
@@ -55,7 +50,7 @@ public class PlayerAttack : MonoBehaviour
 
     public int GetDamage()
     {
-        int strength = playerLevel != null ? playerLevel.strength : 0;
-        return 2 + strength * 1;
+        // Calcula el daño según fuerza o stats del jugador
+        return 2; // o 2 + strength * 1 si tenías stats
     }
 }

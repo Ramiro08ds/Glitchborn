@@ -3,8 +3,8 @@
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movimiento")]
-    public float walkSpeed = 5f;
-    public float sprintSpeed = 9f;
+    public float walkSpeed = 8f;
+    public float sprintSpeed = 18f;
     private float currentSpeed;
 
     [Header("Cámara y Control")]
@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
     public float attackDuration = 0.8f;
 
     [Header("Referencias")]
-    public PlayerLevelUI menu; // ⚡ Arrastrar tu PlayerLevelUI aquí en el inspector
+    public PlayerLevelUI menu; 
 
     void Awake()
     {

@@ -758,7 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1abd9483eeb74064b9a0dcfd168c0c97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOverlay: {fileID: 0}
+  damageOverlay: {fileID: 1540386386}
   damageColor: {r: 1, g: 0, b: 0, a: 0.25}
   overlayFadeSpeed: 2.5
 --- !u!82 &171999488
@@ -4263,28 +4263,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7273122541058609607, guid: 726b807f04e27d74fb42c06a03cdb1ad,
-        type: 3}
-      propertyPath: hitboxActiveTime
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7273122541058609656, guid: 726b807f04e27d74fb42c06a03cdb1ad,
         type: 3}
       propertyPath: menu
       value: 
       objectReference: {fileID: 490445019}
-    - target: {fileID: 672191378, guid: 726b807f04e27d74fb42c06a03cdb1ad, type: 3}
-      propertyPath: boxSize.x
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 672191378, guid: 726b807f04e27d74fb42c06a03cdb1ad, type: 3}
-      propertyPath: boxSize.z
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 672191378, guid: 726b807f04e27d74fb42c06a03cdb1ad, type: 3}
-      propertyPath: boxSize.y
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 726b807f04e27d74fb42c06a03cdb1ad, type: 3}
 --- !u!1001 &8115438334038889240

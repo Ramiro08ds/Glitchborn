@@ -9,7 +9,7 @@ public class PlayerHitFeedback : MonoBehaviour
     [Header("Pantalla")]
     public Image damageOverlay;
     public Color damageColor = new Color(1, 0, 0, 0.25f);
-    public float overlayFadeSpeed = 2.5f;
+    public float overlayFadeSpeed = 3.5f;
 
     void Awake()
     {

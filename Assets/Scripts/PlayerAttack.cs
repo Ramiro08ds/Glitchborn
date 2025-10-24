@@ -22,16 +22,14 @@ public class PlayerAttack : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && canAttack)
-        {
             StartCoroutine(Attack());
-        }
     }
 
     IEnumerator Attack()
     {
         canAttack = false;
 
-        // Espera antes de activar el golpe (sincronizar con animación)
+        // Espera antes del impacto (para sincronizar con la animación)
         yield return new WaitForSeconds(delayBeforeHit);
 
         // Activa el hitbox
@@ -50,7 +48,8 @@ public class PlayerAttack : MonoBehaviour
 
     public int GetDamage()
     {
-        // Calcula el daño según fuerza o stats del jugador
-        return 2; // o 2 + strength * 1 si tenías stats
+        // 3 de daño base + 3 por cada punto de fuerza
+        int strength = PlayerLevelSystem.Instance != null ? PlayerLevelSystem.Instance.strength : 1;
+        return 3 + (strength - 1) * 3;
     }
 }

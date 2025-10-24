@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Collider))]
 public class SwordHitbox : MonoBehaviour
@@ -8,21 +9,18 @@ public class SwordHitbox : MonoBehaviour
     [HideInInspector] public PlayerAttack owner;
 
     [Header("Hitbox Settings")]
-    [Tooltip("Tamaño local del box en unidades (xyz).")]
     public Vector3 boxSize = new Vector3(0.6f, 0.2f, 1f);
-    [Tooltip("Offset local desde el transform del hitbox.")]
     public Vector3 localCenter = Vector3.zero;
-    [Tooltip("Layer(s) que representan a los enemigos.")]
     public LayerMask enemyLayer;
-    [Tooltip("Cada cuánto (segundos) comprobamos Overlap mientras el hitbox está activo. 0 = cada FixedUpdate.")]
-    public float checkInterval = 0f; // 0 => FixedUpdate
+    public float checkInterval = 0f;
+
+    [Header("Knockback")]
+    public float knockbackForce = 2f;
 
     private Collider col;
     private HashSet<EnemyHealth> damagedThisSwing = new HashSet<EnemyHealth>();
     private bool isActive = false;
     private Coroutine activeRoutine;
-
-    // Reuse array to avoid allocations (ajusta tamaño si hay muchos enemigos)
     private Collider[] overlapResults = new Collider[16];
 
     void Awake()
@@ -59,7 +57,6 @@ public class SwordHitbox : MonoBehaviour
 
     IEnumerator ActiveCheckRoutine()
     {
-        // Si checkInterval == 0 usamos FixedUpdate para sincronizar con physics
         if (checkInterval <= 0f)
         {
             while (isActive)
@@ -81,50 +78,75 @@ public class SwordHitbox : MonoBehaviour
 
     void DoOverlapCheck()
     {
-        // compute world center & halfExtents for OverlapBox
         Vector3 worldCenter = transform.TransformPoint(localCenter);
         Vector3 worldHalfExtents = Vector3.Scale(boxSize * 0.5f, transform.lossyScale);
 
-        // Use OverlapBoxNonAlloc to avoid GC spikes
         int hits = Physics.OverlapBoxNonAlloc(worldCenter, worldHalfExtents, overlapResults, transform.rotation, enemyLayer);
         for (int i = 0; i < hits; i++)
         {
             var other = overlapResults[i];
-            if (other == null) continue;
-            HandleHitCollider(other);
+            if (other != null) HandleHitCollider(other);
         }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        // fallback en caso de que el Overlap no lo pillara
-        HandleHitCollider(other);
-    }
+    void OnTriggerEnter(Collider other) => HandleHitCollider(other);
 
     void HandleHitCollider(Collider other)
     {
         if (owner == null) return;
 
         EnemyHealth eh = other.GetComponentInParent<EnemyHealth>();
-        if (eh == null) return;
+        if (eh == null || damagedThisSwing.Contains(eh)) return;
 
-        if (damagedThisSwing.Contains(eh)) return;
+        // Knockback seguro usando NavMeshAgent
+        ApplyKnockback(eh);
 
+        // Daño según fuerza del jugador
         int damage = owner.GetDamage();
         eh.TakeDamage(damage);
+        
 
-        // Feedback
-        if (HitFeedback.Instance != null)
-        {
-            HitFeedback.Instance.PlayHitFeedback(other.transform.position);
-            HitFeedback.Instance.StartCoroutine(HitFeedback.Instance.HitStop(0.04f));
-        }
+        // Feedback de daño del jugador
+        if (PlayerHitFeedback.instance != null)
+            PlayerHitFeedback.instance.OnPlayerDamaged();
 
         damagedThisSwing.Add(eh);
-        Debug.Log($"SwordHitbox: golpeé a {eh.name} por {damage} de daño");
+        Debug.Log($"Golpeado {eh.name} por {damage} de daño");
     }
 
-    // Visualizador en editor para ajustar hitbox
+    void ApplyKnockback(EnemyHealth enemy)
+    {
+        NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            Vector3 dir = (enemy.transform.position - transform.position).normalized;
+            Vector3 knockPos = enemy.transform.position + dir * knockbackForce;
+
+            StartCoroutine(MoveEnemyNavMesh(agent, knockPos));
+        }
+    }
+
+    IEnumerator MoveEnemyNavMesh(NavMeshAgent agent, Vector3 targetPos)
+    {
+        float elapsed = 0f;
+        float duration = 0.15f;
+        Vector3 start = agent.transform.position;
+
+        while (elapsed < duration)
+        {
+            if (agent == null)
+            {
+                Debug.Log("Hola");
+                yield break;
+            }
+                
+            Vector3 newPos = Vector3.Lerp(start, targetPos, elapsed / duration);
+            
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 0, 0, 0.25f);

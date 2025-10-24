@@ -55,3 +55,4 @@ public class ThirdPersonCamera : MonoBehaviour
         player.rotation = Quaternion.Euler(0, rotacionX, 0);
     }
 }
+

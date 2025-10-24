@@ -33,7 +33,6 @@ public class PlayerHealthManager : MonoBehaviour
         UpdateHealthUI();
     }
 
-
     public int CurrentHealth
     {
         get { return currentHealth; }
@@ -54,12 +53,15 @@ public class PlayerHealthManager : MonoBehaviour
         }
     }
 
-
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthUI();
+
+        
+        if (PlayerHitFeedback.instance != null)
+            PlayerHitFeedback.instance.OnPlayerDamaged();
 
         if (currentHealth <= 0)
             Die();

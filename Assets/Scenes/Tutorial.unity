@@ -1351,6 +1351,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 372155197}
   m_CullTransparentMesh: 0
+--- !u!1 &437105365 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2842339577327033513, guid: dfe719cbbf9d63f4abc6f773a2f61c9a,
+    type: 3}
+  m_PrefabInstance: {fileID: 4114352397717844706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &483896857
 GameObject:
   m_ObjectHideFlags: 0
@@ -2306,6 +2312,64 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &999207020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 999207023}
+  - component: {fileID: 999207022}
+  - component: {fileID: 999207021}
+  m_Layer: 0
+  m_Name: ZonaEnemies1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &999207021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999207020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411efb6bd20f2034591dcf9a19fe71f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneName: ZonaEnemies1
+--- !u!65 &999207022
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999207020}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 49.980167, y: 22.541487, z: 1}
+  m_Center: {x: 0.15465164, y: 9.272445, z: 0}
+--- !u!4 &999207023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999207020}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 26.972063, y: -17.2, z: 53.98}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1002807678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2411,6 +2475,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 75c327bb742180744968bb099af30e9e,
     type: 3}
   m_PrefabInstance: {fileID: 1163160964}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1206744430 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2104586629711871285, guid: 713d00ee79660f247a6d79f2732a59fd,
+    type: 3}
+  m_PrefabInstance: {fileID: 5055551981851657576}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1302350500
 GameObject:
@@ -3065,6 +3135,56 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1595202170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1595202172}
+  - component: {fileID: 1595202171}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1595202171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595202170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4647ce150af1dde45a63266e15de91a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints:
+  - zoneName: ZonaEnemies1
+    spawnPositions:
+    - {fileID: 999207023}
+    enemyPrefabs:
+    - {fileID: 437105365}
+    - {fileID: 1206744430}
+--- !u!4 &1595202172
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595202170}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.51, y: -16.07, z: 38.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1646251947
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -3,8 +3,8 @@
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movimiento")]
-    public float walkSpeed = 8f;
-    public float sprintSpeed = 18f;
+    public float walkSpeed = 10f;
+    public float sprintSpeed = 20f;
     private float currentSpeed;
 
     [Header("Cámara y Control")]
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController controller;
     private Transform cam;
-    private Animator animator; 
+    private Animator animator;
 
     private float xRotation = 0f;
     private Vector3 velocity;
@@ -29,24 +29,25 @@ public class PlayerMovement : MonoBehaviour
     public float attackDuration = 0.8f;
 
     [Header("Referencias")]
-    public PlayerLevelUI menu; 
+    public PlayerLevelUI menu;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
         cam = Camera.main.transform;
-        animator = GetComponentInChildren<Animator>(); 
+        animator = GetComponentInChildren<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
         currentSpeed = walkSpeed;
     }
 
     void Update()
     {
-        // --- ⚡ Si el menú está abierto, no procesar inputs ---
+        // --- Si el menú está abierto ---
         if (menu != null && menu.menuAbierto)
         {
-            // Detener movimiento, animaciones de velocidad y rotación
             animator.SetFloat("Speed", 0);
+            velocity.y += gravity * Time.deltaTime;
+            controller.Move(velocity * Time.deltaTime);
             return;
         }
 
@@ -54,35 +55,31 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
-        {
             velocity.y = -2f;
-        }
 
         // --- Sprint ---
-        if (Input.GetKey(KeyCode.LeftShift) && isGrounded)
-            currentSpeed = sprintSpeed;
-        else
-            currentSpeed = walkSpeed;
+        currentSpeed = (Input.GetKey(KeyCode.LeftShift) && isGrounded) ? sprintSpeed : walkSpeed;
 
-        // --- Movimiento horizontal ---
+        // --- Movimiento ---
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
 
-        // --- Animaciones de movimiento ---
+        // --- Animación de movimiento escalada por velocidad ---
         float moveAmount = new Vector3(x, 0, z).magnitude;
-        float speedValue = moveAmount * currentSpeed;
-        animator.SetFloat("Speed", speedValue);
 
-        // --- Rotación con el mouse ---
+        // Escalamos según velocidad actual (para que al pasar cierto valor, corra)
+        float normalizedSpeed = moveAmount * (currentSpeed / sprintSpeed);
+        normalizedSpeed = Mathf.Clamp01(normalizedSpeed);
+
+        animator.SetFloat("Speed", normalizedSpeed);
+
+        // --- Rotación de cámara ---
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
         cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
 
@@ -91,29 +88,22 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
             animator.SetBool("IsJumping", true);
-            Invoke("StopJumping", 0.5f);
+            Invoke(nameof(StopJumping), 0.5f);
         }
 
         // --- Ataque ---
-        if (Input.GetMouseButtonDown(0) && !isAttacking) 
+        if (Input.GetMouseButtonDown(0) && !isAttacking)
         {
             isAttacking = true;
             animator.SetTrigger("Attack");
-            Invoke("ResetAttack", attackDuration);
+            Invoke(nameof(ResetAttack), attackDuration);
         }
 
-        // --- Aplicar gravedad ---
+        // --- Gravedad ---
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 
-    void StopJumping()
-    {
-        animator.SetBool("IsJumping", false);
-    }
-
-    void ResetAttack()
-    {
-        isAttacking = false;
-    }
+    void StopJumping() => animator.SetBool("IsJumping", false);
+    void ResetAttack() => isAttacking = false;
 }

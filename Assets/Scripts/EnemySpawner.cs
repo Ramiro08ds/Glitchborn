@@ -39,8 +39,21 @@ public class EnemySpawner : MonoBehaviour
 
         foreach (Transform pos in zone.spawnPositions)
         {
+            if (zone.enemyPrefabs == null || zone.enemyPrefabs.Length == 0)
+            {
+                Debug.LogWarning($"No hay prefabs asignados en la zona {zoneName}");
+                continue;
+            }
+
             int randomIndex = Random.Range(0, zone.enemyPrefabs.Length);
             GameObject enemyPrefab = zone.enemyPrefabs[randomIndex];
+
+            if (enemyPrefab == null)
+            {
+                Debug.LogWarning($"Uno de los prefabs en la zona {zoneName} está destruido o sin asignar.");
+                continue;
+            }
+
             Instantiate(enemyPrefab, pos.position, pos.rotation);
         }
 

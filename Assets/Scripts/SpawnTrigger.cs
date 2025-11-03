@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpawnTrigger : MonoBehaviour
 {
@@ -11,12 +9,18 @@ public class SpawnTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            if (EnemySpawner.Instance == null)
+            {
+                Debug.LogError("❌ EnemySpawner.Instance es null. Asegúrate de tener uno en la escena.");
+                return;
+            }
+
+            Debug.Log($"▶ Jugador entró a la zona {zoneName}, generando enemigos...");
             EnemySpawner.Instance.SpawnEnemies(zoneName);
             Destroy(gameObject); // Evita que se active más de una vez
         }
     }
 
-    // Dibuja el collider en el editor para ver el área
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
@@ -25,5 +29,3 @@ public class SpawnTrigger : MonoBehaviour
             Gizmos.DrawCube(col.bounds.center, col.bounds.size);
     }
 }
-
-

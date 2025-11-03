@@ -13,7 +13,7 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("References")]
     public EnemyHealthBar healthBar;
-    public PlayerLevelSystem player;
+    public PlayerLevelSystem player; // El Player al que se le dará XP y curación
 
     [Header("Feedback")]
     public Renderer enemyRenderer;
@@ -41,12 +41,10 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
-        Debug.Log(gameObject.name + " recibió " + amount + " de daño. Vida restante: " + currentHealth);
 
         if (healthBar != null)
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
 
-        // Efectos visuales y físicos
         StartCoroutine(FlashDamage());
         StartCoroutine(ApplyKnockback());
 
@@ -74,11 +72,16 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
-        Debug.Log(gameObject.name + " murió!");
-
         if (player != null)
             player.EnemyKilled(xpReward, healOnKill);
 
         Destroy(gameObject);
     }
+
+    // Método público para asignar el player desde el spawner
+    public void SetPlayer(PlayerLevelSystem p)
+    {
+        player = p;
+    }
 }
+

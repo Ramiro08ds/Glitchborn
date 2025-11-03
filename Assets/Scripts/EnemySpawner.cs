@@ -2,61 +2,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class EnemySpawner : MonoBehaviour
 {
-    public static EnemySpawner Instance; // Singleton
+    public static EnemySpawner Instance;
 
     [System.Serializable]
     public class SpawnPoint
     {
-        public string zoneName;                  // Nombre de la zona
-        public Transform[] spawnPositions;       // Puntos donde aparecerán los enemigos
-        public GameObject[] enemyPrefabs;        // Prefabs posibles de enemigos
+        public string zoneName;
+        public Transform[] spawnPositions;
+        public GameObject[] enemyPrefabs;
     }
 
     [Header("Configuración de zonas y enemigos")]
     public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
 
+    [Header("Referencia al Player")]
+    public PlayerLevelSystem player;
+
     private void Awake()
     {
-        // Garantiza que solo haya un EnemySpawner en la escena
         if (Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
     }
 
-    // Spawnea enemigos de la zona indicada
     public void SpawnEnemies(string zoneName)
     {
+        if (spawnPoints == null || spawnPoints.Count == 0) return;
+
         SpawnPoint zone = spawnPoints.Find(z => z.zoneName == zoneName);
-        if (zone == null)
-        {
-            Debug.LogWarning($"No se encontró una zona llamada {zoneName}");
-            return;
-        }
+        if (zone == null) return;
 
         foreach (Transform pos in zone.spawnPositions)
         {
-            if (zone.enemyPrefabs == null || zone.enemyPrefabs.Length == 0)
-            {
-                Debug.LogWarning($"No hay prefabs asignados en la zona {zoneName}");
-                continue;
-            }
+            if (pos == null) continue;
 
-            int randomIndex = Random.Range(0, zone.enemyPrefabs.Length);
-            GameObject enemyPrefab = zone.enemyPrefabs[randomIndex];
+            List<GameObject> validPrefabs = new List<GameObject>();
+            foreach (GameObject prefab in zone.enemyPrefabs)
+                if (prefab != null) validPrefabs.Add(prefab);
 
-            if (enemyPrefab == null)
-            {
-                Debug.LogWarning($"Uno de los prefabs en la zona {zoneName} está destruido o sin asignar.");
-                continue;
-            }
+            if (validPrefabs.Count == 0) return;
 
-            Instantiate(enemyPrefab, pos.position, pos.rotation);
+            GameObject enemyPrefab = validPrefabs[Random.Range(0, validPrefabs.Count)];
+            GameObject enemy = Instantiate(enemyPrefab, pos.position, pos.rotation);
+
+            // Asignamos player como target y referencia para XP
+            EnemyMovement em = enemy.GetComponent<EnemyMovement>();
+            if (em != null && player != null)
+                em.SetTarget(player.transform);
+
+            EnemyHealth eh = enemy.GetComponent<EnemyHealth>();
+            if (eh != null && player != null)
+                eh.SetPlayer(player);
         }
-
-        Debug.Log($"Enemigos spawneados en la zona: {zoneName}");
     }
 }

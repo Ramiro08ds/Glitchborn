@@ -48,8 +48,8 @@ public class PlayerAttack : MonoBehaviour
 
     public int GetDamage()
     {
-        // 3 de daño base + 3 por cada punto de fuerza
         int strength = PlayerLevelSystem.Instance != null ? PlayerLevelSystem.Instance.strength : 1;
-        return 3 + (strength - 1) * 3;
+        float damage = 3 + (strength - 1) * 1.2f;
+        return Mathf.RoundToInt(damage); 
     }
 }

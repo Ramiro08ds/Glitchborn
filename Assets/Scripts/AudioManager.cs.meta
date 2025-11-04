@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: ec96c8c6bb0ecd44f9585bd6a6f98471
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - musicaCueva: {instanceID: 0}
+  - musicaMenu: {instanceID: 0}
+  - musicaGameOver: {instanceID: 0}
+  - sonidoPasos: {instanceID: 0}
+  - sonidoSalto: {instanceID: 0}
+  - sonidoAterrizaje: {instanceID: 0}
+  - sonidoAtaqueEspada: {instanceID: 0}
+  - sonidoPlayerDamage: {instanceID: 0}
+  - sonidoPlayerMuerte: {instanceID: 0}
+  - sonidoLevelUp: {instanceID: 0}
+  - sonidoEnemyDamage: {instanceID: 0}
+  - sonidoEnemyMuerte: {instanceID: 0}
+  - sonidoEnemyAttack: {instanceID: 0}
+  - sonidoEnemyShoot: {instanceID: 0}
+  - sonidoProyectilImpacto: {instanceID: 0}
+  - sonidoBotonClick: {instanceID: 0}
+  - sonidoAbrirMenu: {instanceID: 0}
+  - sonidoCerrarMenu: {instanceID: 0}
+  - sonidoAntorcha: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

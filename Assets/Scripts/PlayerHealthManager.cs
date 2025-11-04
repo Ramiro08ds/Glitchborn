@@ -10,9 +10,14 @@ public class PlayerHealthManager : MonoBehaviour
     public int maxHealth = 100;
     private int currentHealth;
 
-    [Header("UI")]
+    [Header("UI (HUD)")]
     public Slider healthBar;
     public TMP_Text healthText;
+
+    // 🩸 NUEVO: referencias para la UI del panel de leveleo
+    [Header("UI (Level Panel)")]
+    public Slider healthBarLevelPanel;
+    public TMP_Text healthTextLevelPanel;
 
     void Awake()
     {
@@ -28,6 +33,13 @@ public class PlayerHealthManager : MonoBehaviour
         {
             healthBar.maxValue = maxHealth;
             healthBar.value = currentHealth;
+        }
+
+        // 🩸 NUEVO: también configuramos la barra del panel de leveleo
+        if (healthBarLevelPanel != null)
+        {
+            healthBarLevelPanel.maxValue = maxHealth;
+            healthBarLevelPanel.value = currentHealth;
         }
 
         UpdateHealthUI();
@@ -59,7 +71,6 @@ public class PlayerHealthManager : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthUI();
 
-        
         if (PlayerHitFeedback.instance != null)
             PlayerHitFeedback.instance.OnPlayerDamaged();
 
@@ -76,11 +87,19 @@ public class PlayerHealthManager : MonoBehaviour
 
     private void UpdateHealthUI()
     {
+        // 🔹 Actualiza el HUD normal
         if (healthBar != null)
             healthBar.value = currentHealth;
 
         if (healthText != null)
             healthText.text = currentHealth + " / " + maxHealth;
+
+        // 🔹 NUEVO: actualiza también la UI del panel de leveleo
+        if (healthBarLevelPanel != null)
+            healthBarLevelPanel.value = currentHealth;
+
+        if (healthTextLevelPanel != null)
+            healthTextLevelPanel.text = currentHealth + " / " + maxHealth;
     }
 
     void Die()

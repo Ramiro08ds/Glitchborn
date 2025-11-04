@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private float xRotation = 0f;
     private Vector3 velocity;
     private bool isGrounded;
+    private bool wasGrounded; // 🔊 NUEVO: para detectar aterrizaje
 
     [Header("Chequeo de suelo")]
     public Transform groundCheck;
@@ -30,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Referencias")]
     public PlayerLevelUI menu;
+
+    // 🔊 NUEVO: Control de pasos
+    private bool estaCaminando = false;
 
     void Awake()
     {
@@ -48,17 +52,31 @@ public class PlayerMovement : MonoBehaviour
             animator.SetFloat("Speed", 0);
             velocity.y += gravity * Time.deltaTime;
             controller.Move(velocity * Time.deltaTime);
+            
+            // 🔊 NUEVO: Detener pasos si el menú está abierto
+            if (AudioManager.instance != null)
+                AudioManager.instance.DetenerPasos();
+            
             return;
         }
 
         // --- Detección de suelo ---
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
+        // 🔊 NUEVO: Detectar aterrizaje
+        if (isGrounded && !wasGrounded && velocity.y < 0)
+        {
+            if (AudioManager.instance != null)
+                AudioManager.instance.SonidoPlayerAterrizaje();
+        }
+        wasGrounded = isGrounded;
+
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
         // --- Sprint ---
-        currentSpeed = (Input.GetKey(KeyCode.LeftShift) && isGrounded) ? sprintSpeed : walkSpeed;
+        bool estaCorriendo = Input.GetKey(KeyCode.LeftShift) && isGrounded;
+        currentSpeed = estaCorriendo ? sprintSpeed : walkSpeed;
 
         // --- Movimiento ---
         float x = Input.GetAxis("Horizontal");
@@ -75,6 +93,43 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("Speed", normalizedSpeed);
 
+        // 🔊 NUEVO: Control de sonidos de pasos
+        bool deberiaReproducirPasos = moveAmount > 0.1f;
+        Debug.Log($"isGrounded: {isGrounded}, moveAmount: {moveAmount}, deberiaReproducir: {deberiaReproducirPasos}");
+
+        if (deberiaReproducirPasos && !estaCaminando)
+        {
+            Debug.Log("🔊 INICIANDO PASOS!");
+
+            // Comenzar a reproducir pasos
+            if (AudioManager.instance != null)
+            {
+                Debug.Log("✅ IniciarPasos() llamado");
+                AudioManager.instance.IniciarPasos();
+
+            }
+            else
+            {
+                Debug.LogError("❌ AudioManager.instance es NULL");
+            }
+            estaCaminando = true;
+        }
+        else if (!deberiaReproducirPasos && estaCaminando)
+        {
+            Debug.Log("🔇 DETENIENDO PASOS");
+
+            // Detener pasos
+            if (AudioManager.instance != null)
+                AudioManager.instance.DetenerPasos();
+            estaCaminando = false;
+        }
+
+        // Ajustar velocidad de pasos según si está corriendo o caminando
+        if (estaCaminando && AudioManager.instance != null)
+        {
+            AudioManager.instance.AjustarVelocidadPasos(estaCorriendo);
+        }
+
         // --- Rotación de cámara ---
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
@@ -88,14 +143,26 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
             animator.SetBool("IsJumping", true);
+            
+            // 🔊 NUEVO: Reproducir sonido de salto
+            if (AudioManager.instance != null)
+                AudioManager.instance.SonidoPlayerSalto();
+            
             Invoke(nameof(StopJumping), 0.5f);
         }
 
         // --- Ataque ---
+        // NOTA: Este código de ataque debería estar en PlayerAttack.cs
+        // Mantenido aquí por compatibilidad con tu proyecto actual
         if (Input.GetMouseButtonDown(0) && !isAttacking)
         {
             isAttacking = true;
             animator.SetTrigger("Attack");
+            
+            // 🔊 NUEVO: Reproducir sonido de ataque
+            if (AudioManager.instance != null)
+                AudioManager.instance.SonidoPlayerAtaque();
+            
             Invoke(nameof(ResetAttack), attackDuration);
         }
 
@@ -106,4 +173,11 @@ public class PlayerMovement : MonoBehaviour
 
     void StopJumping() => animator.SetBool("IsJumping", false);
     void ResetAttack() => isAttacking = false;
+
+    // 🔊 NUEVO: Asegurar que los pasos se detengan cuando se desactiva el script
+    void OnDisable()
+    {
+        if (AudioManager.instance != null)
+            AudioManager.instance.DetenerPasos();
+    }
 }

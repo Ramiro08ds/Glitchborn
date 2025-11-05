@@ -276,6 +276,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300000, guid: e9ad1a88bca9b1b4f9f0fe52eeed7ffc, type: 3}
+--- !u!54 &86625334
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86625329}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!1 &103687972
 GameObject:
   m_ObjectHideFlags: 0
@@ -3250,6 +3266,7 @@ MonoBehaviour:
     enemyPrefabs:
     - {fileID: 437105365}
     - {fileID: 1206744430}
+  player: {fileID: 0}
 --- !u!4 &1595202172
 Transform:
   m_ObjectHideFlags: 0
@@ -4416,7 +4433,7 @@ PrefabInstance:
     - target: {fileID: 7273122541058609605, guid: 726b807f04e27d74fb42c06a03cdb1ad,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -17.64
+      value: -19.78
       objectReference: {fileID: 0}
     - target: {fileID: 7273122541058609605, guid: 726b807f04e27d74fb42c06a03cdb1ad,
         type: 3}
@@ -4468,6 +4485,11 @@ PrefabInstance:
       propertyPath: menu
       value: 
       objectReference: {fileID: 490445019}
+    - target: {fileID: 7273122541058609657, guid: 726b807f04e27d74fb42c06a03cdb1ad,
+        type: 3}
+      propertyPath: m_Height
+      value: 7.5780106
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 726b807f04e27d74fb42c06a03cdb1ad, type: 3}
 --- !u!1001 &8115438334038889240

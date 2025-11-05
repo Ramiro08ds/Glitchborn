@@ -14,7 +14,6 @@ public class PlayerHealthManager : MonoBehaviour
     public Slider healthBar;
     public TMP_Text healthText;
 
-    // 🩸 NUEVO: referencias para la UI del panel de leveleo
     [Header("UI (Level Panel)")]
     public Slider healthBarLevelPanel;
     public TMP_Text healthTextLevelPanel;
@@ -35,7 +34,34 @@ public class PlayerHealthManager : MonoBehaviour
             healthBar.value = currentHealth;
         }
 
-        // 🩸 NUEVO: también configuramos la barra del panel de leveleo
+        // Buscar automaticamente la barra del panel de leveleo si no esta asignada
+        if (healthBarLevelPanel == null)
+        {
+            Slider[] allSliders = Resources.FindObjectsOfTypeAll<Slider>();
+            foreach (Slider slider in allSliders)
+            {
+                if (slider.gameObject.scene.isLoaded && slider.gameObject.name == "HealthBar_Leveleo")
+                {
+                    healthBarLevelPanel = slider;
+                    break;
+                }
+            }
+        }
+
+        // Buscar automaticamente el texto del panel de leveleo si no esta asignado
+        if (healthTextLevelPanel == null)
+        {
+            TMP_Text[] allTexts = Resources.FindObjectsOfTypeAll<TMP_Text>();
+            foreach (TMP_Text text in allTexts)
+            {
+                if (text.gameObject.scene.isLoaded && text.gameObject.name == "HealthText_Leveleo")
+                {
+                    healthTextLevelPanel = text;
+                    break;
+                }
+            }
+        }
+
         if (healthBarLevelPanel != null)
         {
             healthBarLevelPanel.maxValue = maxHealth;
@@ -87,14 +113,12 @@ public class PlayerHealthManager : MonoBehaviour
 
     private void UpdateHealthUI()
     {
-        // 🔹 Actualiza el HUD normal
         if (healthBar != null)
             healthBar.value = currentHealth;
 
         if (healthText != null)
             healthText.text = currentHealth + " / " + maxHealth;
 
-        // 🔹 NUEVO: actualiza también la UI del panel de leveleo
         if (healthBarLevelPanel != null)
             healthBarLevelPanel.value = currentHealth;
 
@@ -104,7 +128,7 @@ public class PlayerHealthManager : MonoBehaviour
 
     void Die()
     {
-        Debug.Log("Jugador murió. Intentando llamar a GameManager...");
+        Debug.Log("Jugador murio. Intentando llamar a GameManager...");
         if (GameManager.instance != null)
             GameManager.instance.PlayerDied();
         else

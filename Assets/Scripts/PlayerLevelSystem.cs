@@ -18,13 +18,19 @@ public class PlayerLevelSystem : MonoBehaviour
     public TMP_Text levelUpText;
 
     [Header("Animation Settings")]
-    public float xpFillSpeed = 1f; // Cambiado de 2 a 1 (mitad de velocidad)
+    public float xpFillSpeed = 1f;
+    public float popupDuration = 0.4f;
+    public float popupScale = 1.3f;
+    public float floatingSpeed = 2f;
+    public float floatingAmount = 10f;
 
     public static PlayerLevelSystem Instance;
 
     private float targetXP = 0f;
     private float displayedXP = 0f;
     private bool isAnimating = false;
+    private Vector3 basePosition;
+    private Coroutine popupCoroutine;
 
     void Awake()
     {
@@ -69,7 +75,10 @@ public class PlayerLevelSystem : MonoBehaviour
                 {
                     levelUpText = text;
                     if (levelUpText != null)
+                    {
                         levelUpText.gameObject.SetActive(false);
+                        basePosition = levelUpText.GetComponent<RectTransform>().anchoredPosition3D;
+                    }
                     break;
                 }
             }
@@ -96,6 +105,13 @@ public class PlayerLevelSystem : MonoBehaviour
             {
                 isAnimating = false;
             }
+        }
+
+        // Efecto de flotación (si el texto está visible)
+        if (levelUpText != null && levelUpText.gameObject.activeSelf)
+        {
+            RectTransform rect = levelUpText.GetComponent<RectTransform>();
+            rect.anchoredPosition3D = basePosition + new Vector3(0f, Mathf.Sin(Time.time * floatingSpeed) * floatingAmount, 0f);
         }
     }
 
@@ -161,15 +177,47 @@ public class PlayerLevelSystem : MonoBehaviour
         {
             levelUpText.text = "¡Subiste de nivel!\nNivel " + currentLevel;
             levelUpText.gameObject.SetActive(true);
-            StartCoroutine(HideLevelUpText(2f));
+
+            if (popupCoroutine != null)
+                StopCoroutine(popupCoroutine);
+            popupCoroutine = StartCoroutine(AnimateLevelUpPopup());
         }
     }
 
-    System.Collections.IEnumerator HideLevelUpText(float delay)
+    System.Collections.IEnumerator AnimateLevelUpPopup()
     {
-        yield return new WaitForSeconds(delay);
-        if (levelUpText != null)
-            levelUpText.gameObject.SetActive(false);
+        RectTransform rect = levelUpText.GetComponent<RectTransform>();
+        rect.localScale = Vector3.zero;
+
+        // Escala hacia adelante (aparece)
+        float timer = 0f;
+        while (timer < popupDuration)
+        {
+            float t = timer / popupDuration;
+            float scale = Mathf.Lerp(0f, popupScale, Mathf.SmoothStep(0, 1, t));
+            rect.localScale = Vector3.one * scale;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        rect.localScale = Vector3.one * popupScale;
+
+        // Mantiene visible 2.5 segundos
+        yield return new WaitForSeconds(2.5f);
+
+        // Escala hacia atrás (desaparece)
+        timer = 0f;
+        while (timer < popupDuration)
+        {
+            float t = timer / popupDuration;
+            float scale = Mathf.Lerp(popupScale, 0f, Mathf.SmoothStep(0, 1, t));
+            rect.localScale = Vector3.one * scale;
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        rect.localScale = Vector3.zero;
+        levelUpText.gameObject.SetActive(false);
     }
 
     public void UpgradeStrength()

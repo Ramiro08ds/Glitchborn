@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
 public class AttackRanged : MonoBehaviour
 {
     [Header("References")]
@@ -25,6 +26,11 @@ public class AttackRanged : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
 
+        if (agent == null)
+        {
+            Debug.LogError("AttackRanged: Este enemigo necesita un NavMeshAgent!", this);
+        }
+
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
@@ -40,7 +46,7 @@ public class AttackRanged : MonoBehaviour
 
     private void Update()
     {
-        if (player == null) return;
+        if (player == null || agent == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
@@ -98,18 +104,16 @@ public class AttackRanged : MonoBehaviour
         if (projectilePrefab == null || firePoint == null || player == null) return;
 
         Vector3 direction = (player.position - firePoint.position).normalized;
-        Vector3 spawnPos = firePoint.position + direction * 0.35f; // pequeño offset
+        Vector3 spawnPos = firePoint.position + direction * 0.35f;
         Quaternion rot = Quaternion.LookRotation(direction);
 
         GameObject projectile = Instantiate(projectilePrefab, spawnPos, rot);
         if (projectile == null) return;
 
-        // Asignar layer EnemyProjectile si existe
         int projLayer = LayerMask.NameToLayer("EnemyProjectile");
         if (projLayer != -1)
             projectile.layer = projLayer;
 
-        // Ignorar colisiones con todos los colliders del enemigo
         Collider projectileCollider = projectile.GetComponent<Collider>();
         Collider[] enemyColliders = GetComponentsInChildren<Collider>();
         if (projectileCollider != null)
@@ -118,7 +122,6 @@ public class AttackRanged : MonoBehaviour
                 Physics.IgnoreCollision(projectileCollider, col, true);
         }
 
-        // Rigidbody y velocidad
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {

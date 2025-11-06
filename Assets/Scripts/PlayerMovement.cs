@@ -12,29 +12,32 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 5f;
     public float gravity = -5f;
 
-    private CharacterController controller;
-    private Transform cam;
-    private Animator animator;
-
-    private float xRotation = 0f;
-    private Vector3 velocity;
-    private bool isGrounded;
-    private bool wasGrounded; // 🔊 NUEVO: para detectar aterrizaje
-
     [Header("Chequeo de suelo")]
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
-    private bool isAttacking = false;
+    [Header("Ataque")]
     public float attackDuration = 0.8f;
 
     [Header("Referencias")]
     public PlayerLevelUI menu;
 
-    // 🔊 NUEVO: Control de pasos
+    // --- Privadas ---
+    private CharacterController controller;
+    private Transform cam;
+    private Animator animator;
+
+    private Vector3 velocity;
+    private float xRotation = 0f;
+    private bool isGrounded;
+    private bool wasGrounded;
+    private bool isAttacking = false;
     private bool estaCaminando = false;
 
+    // --------------------------------------------------------
+    // 🔹 INICIALIZACIÓN
+    // --------------------------------------------------------
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -44,140 +47,165 @@ public class PlayerMovement : MonoBehaviour
         currentSpeed = walkSpeed;
     }
 
+    // --------------------------------------------------------
+    // 🔹 LOOP PRINCIPAL
+    // --------------------------------------------------------
     void Update()
     {
-        // --- Si el menú está abierto ---
+        if (MenuAbierto()) return;
+
+        CheckGround();
+        HandleSprint();
+        HandleMovement();
+        HandleCamera();
+        HandleJump();
+        HandleAttack();
+        ApplyGravity();
+    }
+
+    // --------------------------------------------------------
+    // 🔹 MENÚ
+    // --------------------------------------------------------
+    private bool MenuAbierto()
+    {
         if (menu != null && menu.menuAbierto)
         {
             animator.SetFloat("Speed", 0);
             velocity.y += gravity * Time.deltaTime;
             controller.Move(velocity * Time.deltaTime);
-            
-            // 🔊 NUEVO: Detener pasos si el menú está abierto
-            if (AudioManager.instance != null)
-                AudioManager.instance.DetenerPasos();
-            
-            return;
-        }
 
-        // --- Detección de suelo ---
+            // Detener pasos si el menú está abierto
+            AudioManager.instance?.DetenerPasos();
+            return true;
+        }
+        return false;
+    }
+
+    // --------------------------------------------------------
+    // 🔹 SUELO Y GRAVEDAD
+    // --------------------------------------------------------
+    private void CheckGround()
+    {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        // 🔊 NUEVO: Detectar aterrizaje
+        // Sonido de aterrizaje
         if (isGrounded && !wasGrounded && velocity.y < 0)
-        {
-            if (AudioManager.instance != null)
-                AudioManager.instance.SonidoPlayerAterrizaje();
-        }
-        wasGrounded = isGrounded;
+            AudioManager.instance?.SonidoPlayerAterrizaje();
 
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-        // --- Sprint ---
-        bool estaCorriendo = Input.GetKey(KeyCode.LeftShift) && isGrounded;
-        currentSpeed = estaCorriendo ? sprintSpeed : walkSpeed;
+        wasGrounded = isGrounded;
+    }
 
-        // --- Movimiento ---
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * currentSpeed * Time.deltaTime);
-
-        // --- Animación de movimiento escalada por velocidad ---
-        float moveAmount = new Vector3(x, 0, z).magnitude;
-
-        // Escalamos según velocidad actual (para que al pasar cierto valor, corra)
-        float normalizedSpeed = moveAmount * (currentSpeed / sprintSpeed);
-        normalizedSpeed = Mathf.Clamp01(normalizedSpeed);
-
-        animator.SetFloat("Speed", normalizedSpeed);
-
-        // 🔊 NUEVO: Control de sonidos de pasos
-        bool deberiaReproducirPasos = moveAmount > 0.1f;
-        Debug.Log($"isGrounded: {isGrounded}, moveAmount: {moveAmount}, deberiaReproducir: {deberiaReproducirPasos}");
-
-        if (deberiaReproducirPasos && !estaCaminando)
-        {
-            Debug.Log("🔊 INICIANDO PASOS!");
-
-            // Comenzar a reproducir pasos
-            if (AudioManager.instance != null)
-            {
-                Debug.Log("✅ IniciarPasos() llamado");
-                AudioManager.instance.IniciarPasos();
-
-            }
-            else
-            {
-                Debug.LogError("❌ AudioManager.instance es NULL");
-            }
-            estaCaminando = true;
-        }
-        else if (!deberiaReproducirPasos && estaCaminando)
-        {
-            Debug.Log("🔇 DETENIENDO PASOS");
-
-            // Detener pasos
-            if (AudioManager.instance != null)
-                AudioManager.instance.DetenerPasos();
-            estaCaminando = false;
-        }
-
-        // Ajustar velocidad de pasos según si está corriendo o caminando
-        if (estaCaminando && AudioManager.instance != null)
-        {
-            AudioManager.instance.AjustarVelocidadPasos(estaCorriendo);
-        }
-
-        // --- Rotación de cámara ---
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
-
-        // --- Salto ---
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
-            animator.SetBool("IsJumping", true);
-            
-            // 🔊 NUEVO: Reproducir sonido de salto
-            if (AudioManager.instance != null)
-                AudioManager.instance.SonidoPlayerSalto();
-            
-            Invoke(nameof(StopJumping), 0.5f);
-        }
-
-        // --- Ataque ---
-        // NOTA: Este código de ataque debería estar en PlayerAttack.cs
-        // Mantenido aquí por compatibilidad con tu proyecto actual
-        if (Input.GetMouseButtonDown(0) && !isAttacking)
-        {
-            isAttacking = true;
-            animator.SetTrigger("Attack");
-            
-            // 🔊 NUEVO: Reproducir sonido de ataque
-            if (AudioManager.instance != null)
-                AudioManager.instance.SonidoPlayerAtaque();
-            
-            Invoke(nameof(ResetAttack), attackDuration);
-        }
-
-        // --- Gravedad ---
+    private void ApplyGravity()
+    {
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 
-    void StopJumping() => animator.SetBool("IsJumping", false);
-    void ResetAttack() => isAttacking = false;
-
-    // 🔊 NUEVO: Asegurar que los pasos se detengan cuando se desactiva el script
-    void OnDisable()
+    // --------------------------------------------------------
+    // 🔹 MOVIMIENTO Y CORRER
+    // --------------------------------------------------------
+    private void HandleSprint()
     {
-        if (AudioManager.instance != null)
-            AudioManager.instance.DetenerPasos();
+        bool estaCorriendo = Input.GetKey(KeyCode.LeftShift) && isGrounded;
+        currentSpeed = estaCorriendo ? sprintSpeed : walkSpeed;
+
+        if (estaCaminando && AudioManager.instance != null)
+            AudioManager.instance.AjustarVelocidadPasos(estaCorriendo);
+    }
+
+    private void HandleMovement()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * x + transform.forward * z;
+        controller.Move(move * currentSpeed * Time.deltaTime);
+
+        float moveAmount = new Vector3(x, 0, z).magnitude;
+        float normalizedSpeed = Mathf.Clamp01(moveAmount * (currentSpeed / sprintSpeed));
+
+        animator.SetFloat("Speed", normalizedSpeed);
+        HandleFootsteps(moveAmount);
+    }
+
+    // --------------------------------------------------------
+    // 🔹 SONIDOS DE PASOS
+    // --------------------------------------------------------
+    private void HandleFootsteps(float moveAmount)
+    {
+        bool deberiaReproducirPasos = moveAmount > 0.1f;
+
+        if (deberiaReproducirPasos && !estaCaminando)
+        {
+            AudioManager.instance?.IniciarPasos();
+            estaCaminando = true;
+        }
+        else if (!deberiaReproducirPasos && estaCaminando)
+        {
+            AudioManager.instance?.DetenerPasos();
+            estaCaminando = false;
+        }
+    }
+
+    // --------------------------------------------------------
+    // 🔹 CÁMARA Y ROTACIÓN
+    // --------------------------------------------------------
+    private void HandleCamera()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        cam.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.Rotate(Vector3.up * mouseX);
+    }
+
+    // --------------------------------------------------------
+    // 🔹 SALTO
+    // --------------------------------------------------------
+    private void HandleJump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+            animator.SetBool("IsJumping", true);
+
+            AudioManager.instance?.SonidoPlayerSalto();
+            Invoke(nameof(StopJumping), 0.5f);
+        }
+    }
+
+    private void StopJumping() => animator.SetBool("IsJumping", false);
+
+    // --------------------------------------------------------
+    // 🔹 ATAQUE
+    // --------------------------------------------------------
+    private void HandleAttack()
+    {
+        if (Input.GetMouseButtonDown(0) && !isAttacking)
+        {
+            isAttacking = true;
+            animator.SetTrigger("Attack");
+            AudioManager.instance?.SonidoPlayerAtaque();
+            Invoke(nameof(ResetAttack), attackDuration);
+        }
+    }
+
+    private void ResetAttack() => isAttacking = false;
+
+    // --------------------------------------------------------
+    // 🔹 EVENTOS UNITY
+    // --------------------------------------------------------
+    void OnDisable() => AudioManager.instance?.DetenerPasos();
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
     }
 }

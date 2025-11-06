@@ -4902,6 +4902,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7273122541019571532, guid: 726b807f04e27d74fb42c06a03cdb1ad,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.58
+      objectReference: {fileID: 0}
     - target: {fileID: 7273122541058609604, guid: 726b807f04e27d74fb42c06a03cdb1ad,
         type: 3}
       propertyPath: healthBar
@@ -4972,6 +4977,11 @@ PrefabInstance:
       propertyPath: menu
       value: 
       objectReference: {fileID: 490445019}
+    - target: {fileID: 7273122541058609656, guid: 726b807f04e27d74fb42c06a03cdb1ad,
+        type: 3}
+      propertyPath: groundDistance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7273122541058609657, guid: 726b807f04e27d74fb42c06a03cdb1ad,
         type: 3}
       propertyPath: m_Height

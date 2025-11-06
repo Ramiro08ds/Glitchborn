@@ -208,7 +208,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void DetenerPasos()
     {
-        if (pasosSource.isPlaying)
+        if (pasosSource != null && pasosSource.isPlaying)
             pasosSource.Stop();
     }
 

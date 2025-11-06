@@ -201,7 +201,11 @@ public class PlayerMovement : MonoBehaviour
     // --------------------------------------------------------
     // 🔹 EVENTOS UNITY
     // --------------------------------------------------------
-    void OnDisable() => AudioManager.instance?.DetenerPasos();
+    void OnDisable()
+    {
+        if (AudioManager.instance != null && AudioManager.instance.gameObject != null)
+            AudioManager.instance.DetenerPasos();
+    }
 
     private void OnDrawGizmos()
     {

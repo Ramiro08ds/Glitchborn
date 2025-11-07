@@ -7,8 +7,8 @@ public class PlayerLevelUI : MonoBehaviour
     public GameObject panel;
 
     public TextMeshProUGUI txtLevel;
-    public TextMeshProUGUI txtXP;
-    public Image xpBar;
+    // txtXP eliminado - ya no se usa
+    public Slider xpBar;  // Cambiado de Image a Slider
 
     public TextMeshProUGUI txtStrength;
     public TextMeshProUGUI txtMaxHealth;
@@ -20,15 +20,25 @@ public class PlayerLevelUI : MonoBehaviour
     public PlayerLevelSystem playerLevel;
     public PlayerHealthManager playerHealthManager;
 
-    public int healthIncreasePerPoint = 3; 
+    public int healthIncreasePerPoint = 3;
 
     public bool menuAbierto = false;
 
     void Start()
     {
+        if (panel == null)
+        {
+            Debug.LogError("PlayerLevelUI: Panel no está asignado!");
+            return;
+        }
+
         panel.SetActive(false);
-        btnAddStrength.onClick.AddListener(AddStrength);
-        btnAddMaxHealth.onClick.AddListener(AddMaxHealth);
+
+        if (btnAddStrength != null)
+            btnAddStrength.onClick.AddListener(AddStrength);
+        if (btnAddMaxHealth != null)
+            btnAddMaxHealth.onClick.AddListener(AddMaxHealth);
+
         UpdateUI();
     }
 
@@ -43,6 +53,12 @@ public class PlayerLevelUI : MonoBehaviour
 
     void AbrirMenu()
     {
+        if (panel == null)
+        {
+            Debug.LogError("No se puede abrir menu: Panel es NULL!");
+            return;
+        }
+
         panel.SetActive(true);
         UpdateUI();
         Time.timeScale = 0f;
@@ -62,15 +78,18 @@ public class PlayerLevelUI : MonoBehaviour
 
     void AddStrength()
     {
-        playerLevel.UpgradeStrength();
-        UpdateUI();
+        if (playerLevel != null)
+        {
+            playerLevel.UpgradeStrength();
+            UpdateUI();
+        }
     }
 
     void AddMaxHealth()
     {
-        if (playerLevel.skillPoints > 0 && playerHealthManager != null)
+        if (playerLevel != null && playerLevel.skillPoints > 0 && playerHealthManager != null)
         {
-            playerLevel.UpgradeMaxHealth(); 
+            playerLevel.UpgradeMaxHealth();
 
             // aumenta maxHealth y currentHealth proporcionalmente
             playerHealthManager.MaxHealth += healthIncreasePerPoint;
@@ -82,14 +101,35 @@ public class PlayerLevelUI : MonoBehaviour
 
     void UpdateUI()
     {
-        txtLevel.text = "Nivel: " + playerLevel.currentLevel;
-        txtXP.text = $"XP: {playerLevel.currentXP} / {playerLevel.xpToNextLevel}";
+        if (playerLevel == null)
+        {
+            Debug.LogError("PlayerLevelSystem no está asignado!");
+            return;
+        }
 
+        if (playerHealthManager == null)
+        {
+            Debug.LogError("PlayerHealthManager no está asignado!");
+            return;
+        }
+
+        if (txtLevel != null)
+            txtLevel.text = "Nivel: " + playerLevel.currentLevel;
+
+        // txtXP eliminado - ya no se usa
+
+        // Cambiado de fillAmount a value para Slider
         if (xpBar != null)
-            xpBar.fillAmount = (float)playerLevel.currentXP / playerLevel.xpToNextLevel;
+        {
+            xpBar.maxValue = playerLevel.xpToNextLevel;
+            xpBar.value = playerLevel.currentXP;
+        }
 
-        txtStrength.text = "Fuerza: " + playerLevel.strength;
-        txtMaxHealth.text = "Vida Máx: " + playerHealthManager.MaxHealth;
-        txtSkillPoints.text = "Puntos: " + playerLevel.skillPoints;
+        if (txtStrength != null)
+            txtStrength.text = "Fuerza: " + playerLevel.strength;
+        if (txtMaxHealth != null)
+            txtMaxHealth.text = "Vida Máx: " + playerHealthManager.MaxHealth;
+        if (txtSkillPoints != null)
+            txtSkillPoints.text = "Puntos: " + playerLevel.skillPoints;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -30,10 +29,18 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnEnemies(string zoneName)
     {
-        if (spawnPoints == null || spawnPoints.Count == 0) return;
+        if (spawnPoints == null || spawnPoints.Count == 0)
+        {
+            Debug.LogWarning(" No hay zonas configuradas en el EnemySpawner");
+            return;
+        }
 
         SpawnPoint zone = spawnPoints.Find(z => z.zoneName == zoneName);
-        if (zone == null) return;
+        if (zone == null)
+        {
+            Debug.LogWarning($" No se encontró la zona '{zoneName}' en el EnemySpawner");
+            return;
+        }
 
         foreach (Transform pos in zone.spawnPositions)
         {
@@ -43,12 +50,16 @@ public class EnemySpawner : MonoBehaviour
             foreach (GameObject prefab in zone.enemyPrefabs)
                 if (prefab != null) validPrefabs.Add(prefab);
 
-            if (validPrefabs.Count == 0) return;
+            if (validPrefabs.Count == 0)
+            {
+                Debug.LogWarning($" No hay prefabs válidos en la zona {zoneName}");
+                continue;
+            }
 
             GameObject enemyPrefab = validPrefabs[Random.Range(0, validPrefabs.Count)];
             GameObject enemy = Instantiate(enemyPrefab, pos.position, pos.rotation);
+            Debug.Log($"Spawneado enemigo: {enemy.name} en {pos.position}");
 
-            // Asignamos player como target y referencia para XP
             EnemyMovement em = enemy.GetComponent<EnemyMovement>();
             if (em != null && player != null)
                 em.SetTarget(player.transform);
@@ -59,3 +70,4 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 }
+

@@ -17,6 +17,10 @@ public class PlayerLevelSystem : MonoBehaviour
     public TMP_Text xpTextHUD;
     public TMP_Text levelUpText;
 
+    [Header("UI (Level Panel)")]
+    public Slider xpBarLevelPanel;
+    public TMP_Text xpTextLevelPanel;
+
     [Header("Animation Settings")]
     public float xpFillSpeed = 1f;
     public float popupDuration = 0.4f;
@@ -66,6 +70,34 @@ public class PlayerLevelSystem : MonoBehaviour
             }
         }
 
+        // NUEVO: Buscar barra de XP del panel de leveleo
+        if (xpBarLevelPanel == null)
+        {
+            Slider[] allSliders = Resources.FindObjectsOfTypeAll<Slider>();
+            foreach (Slider slider in allSliders)
+            {
+                if (slider.gameObject.scene.isLoaded && slider.gameObject.name == "XpBar_Leveleo")
+                {
+                    xpBarLevelPanel = slider;
+                    break;
+                }
+            }
+        }
+
+        // NUEVO: Buscar texto de XP del panel de leveleo
+        if (xpTextLevelPanel == null)
+        {
+            TMP_Text[] allTexts = Resources.FindObjectsOfTypeAll<TMP_Text>();
+            foreach (TMP_Text text in allTexts)
+            {
+                if (text.gameObject.scene.isLoaded && text.gameObject.name == "XpText_Leveleo")
+                {
+                    xpTextLevelPanel = text;
+                    break;
+                }
+            }
+        }
+
         if (levelUpText == null)
         {
             TMP_Text[] allTexts = Resources.FindObjectsOfTypeAll<TMP_Text>();
@@ -95,11 +127,7 @@ public class PlayerLevelSystem : MonoBehaviour
         {
             displayedXP = Mathf.MoveTowards(displayedXP, targetXP, xpFillSpeed * Time.deltaTime * xpToNextLevel);
 
-            if (xpBarHUD != null)
-                xpBarHUD.value = displayedXP;
-
-            if (xpTextHUD != null)
-                xpTextHUD.text = Mathf.FloorToInt(displayedXP) + " / " + xpToNextLevel;
+            UpdateXPVisuals();
 
             if (Mathf.Approximately(displayedXP, targetXP))
             {
@@ -113,6 +141,23 @@ public class PlayerLevelSystem : MonoBehaviour
             RectTransform rect = levelUpText.GetComponent<RectTransform>();
             rect.anchoredPosition3D = basePosition + new Vector3(0f, Mathf.Sin(Time.time * floatingSpeed) * floatingAmount, 0f);
         }
+    }
+
+    void UpdateXPVisuals()
+    {
+        // Actualizar barra HUD
+        if (xpBarHUD != null)
+            xpBarHUD.value = displayedXP;
+
+        if (xpTextHUD != null)
+            xpTextHUD.text = Mathf.FloorToInt(displayedXP) + " / " + xpToNextLevel;
+
+        // NUEVO: Actualizar barra del panel de leveleo
+        if (xpBarLevelPanel != null)
+            xpBarLevelPanel.value = displayedXP;
+
+        if (xpTextLevelPanel != null)
+            xpTextLevelPanel.text = Mathf.FloorToInt(displayedXP) + " / " + xpToNextLevel;
     }
 
     public void GainXP(int amount)
@@ -144,10 +189,16 @@ public class PlayerLevelSystem : MonoBehaviour
 
         LevelUp();
 
+        // Resetear ambas barras a 0
         if (xpBarHUD != null)
             xpBarHUD.value = 0;
         if (xpTextHUD != null)
             xpTextHUD.text = "0 / " + xpToNextLevel;
+
+        if (xpBarLevelPanel != null)
+            xpBarLevelPanel.value = 0;
+        if (xpTextLevelPanel != null)
+            xpTextLevelPanel.text = "0 / " + xpToNextLevel;
 
         ShowLevelUpText();
 
@@ -252,5 +303,9 @@ public class PlayerLevelSystem : MonoBehaviour
     {
         if (xpBarHUD != null)
             xpBarHUD.maxValue = xpToNextLevel;
+
+        // NUEVO: También actualizar el max del panel
+        if (xpBarLevelPanel != null)
+            xpBarLevelPanel.maxValue = xpToNextLevel;
     }
 }

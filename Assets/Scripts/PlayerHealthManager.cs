@@ -131,6 +131,9 @@ public class PlayerHealthManager : MonoBehaviour
 
     void Die()
     {
+        if (AudioManager.instance != null)
+            AudioManager.instance.SonidoPlayerMuerte();
+
         Debug.Log("Jugador murio. Intentando llamar a GameManager...");
         if (GameManager.instance != null)
             GameManager.instance.PlayerDied();

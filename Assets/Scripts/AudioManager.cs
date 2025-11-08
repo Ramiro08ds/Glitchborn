@@ -37,8 +37,8 @@ public class AudioManager : MonoBehaviour
     [Tooltip("Sonido cuando el jugador golpea a un enemigo (impacto)")]
     public AudioClip sonidoPlayerGolpeaEnemigo;
 
-    [Tooltip("Sonido cuando el jugador recibe daño")]
-    public AudioClip sonidoPlayerDamage;
+    [Tooltip("Sonidos cuando el jugador recibe daño (rotación aleatoria)")]
+    public AudioClip[] sonidosPlayerDamage;  // Array de sonidos
 
     [Tooltip("Sonido de muerte del jugador")]
     public AudioClip sonidoPlayerMuerte;
@@ -274,7 +274,20 @@ public class AudioManager : MonoBehaviour
     public void SonidoPlayerAterrizaje() => ReproducirSFX(sonidoAterrizaje);
     public void SonidoPlayerAtaque() => sfxSource.PlayOneShot(sonidoAtaqueEspada, volumenSFX * volumenSwoosh);
     public void SonidoPlayerGolpeaEnemigo() => sfxSource.PlayOneShot(sonidoPlayerGolpeaEnemigo, volumenSFX * volumenHitEnemigo);
-    public void SonidoPlayerDamage() => ReproducirSFX(sonidoPlayerDamage);
+
+    // NUEVO: Reproduce un sonido aleatorio de daño
+    public void SonidoPlayerDamage()
+    {
+        if (sonidosPlayerDamage == null || sonidosPlayerDamage.Length == 0) return;
+
+        // Elegir un sonido aleatorio del array
+        int randomIndex = Random.Range(0, sonidosPlayerDamage.Length);
+        AudioClip randomClip = sonidosPlayerDamage[randomIndex];
+
+        if (randomClip != null)
+            ReproducirSFX(randomClip);
+    }
+
     public void SonidoPlayerMuerte() => ReproducirSFX(sonidoPlayerMuerte);
     public void SonidoLevelUp() => ReproducirSFX(sonidoLevelUp);
 

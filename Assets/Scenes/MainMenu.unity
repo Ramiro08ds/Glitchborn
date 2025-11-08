@@ -151,7 +151,9 @@ MonoBehaviour:
   sonidoAtaqueEspada: {fileID: 8300000, guid: b494c4e061e63de4483a40c9ff56c8de, type: 3}
   sonidoPlayerGolpeaEnemigo: {fileID: 8300000, guid: a09533530fbb4744ebe7f45c6bc8547e,
     type: 3}
-  sonidoPlayerDamage: {fileID: 0}
+  sonidosPlayerDamage:
+  - {fileID: 8300000, guid: 726dea3f8b0a1ac4d91e4fcbfc494c1d, type: 3}
+  - {fileID: 0}
   sonidoPlayerMuerte: {fileID: 0}
   sonidoLevelUp: {fileID: 8300000, guid: cd0aba5a2d304e740907632510951f7f, type: 3}
   sonidoEnemyDamage: {fileID: 0}
@@ -160,12 +162,12 @@ MonoBehaviour:
   sonidoEnemyShoot: {fileID: 0}
   sonidoProyectilImpacto: {fileID: 0}
   sonidoBotonClick: {fileID: 8300000, guid: 925f60dec6cd0a846b8a19699c90a6cc, type: 3}
-  sonidoAbrirMenu: {fileID: 0}
-  sonidoCerrarMenu: {fileID: 0}
+  sonidoAbrirMenu: {fileID: 8300000, guid: b74ee0db093224543ad65ef52483c60f, type: 3}
+  sonidoCerrarMenu: {fileID: 8300000, guid: b74ee0db093224543ad65ef52483c60f, type: 3}
   sonidoAntorcha: {fileID: 0}
   volumenMusica: 0.5
   volumenSFX: 0.8
-  volumenSwoosh: 0.5
+  volumenSwoosh: 0.2
   volumenHitEnemigo: 1.2
   velocidadPasos: 1
 --- !u!4 &135561372

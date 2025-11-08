@@ -148,6 +148,8 @@ MonoBehaviour:
   sonidoSalto: {fileID: 0}
   sonidoAterrizaje: {fileID: 0}
   sonidoAtaqueEspada: {fileID: 8300000, guid: b494c4e061e63de4483a40c9ff56c8de, type: 3}
+  sonidoPlayerGolpeaEnemigo: {fileID: 8300000, guid: a09533530fbb4744ebe7f45c6bc8547e,
+    type: 3}
   sonidoPlayerDamage: {fileID: 0}
   sonidoPlayerMuerte: {fileID: 0}
   sonidoLevelUp: {fileID: 0}

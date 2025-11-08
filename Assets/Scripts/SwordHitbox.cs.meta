@@ -3,7 +3,10 @@ guid: 6b00195eb3c221e40be1aa2712c1d1bc
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - owner: {instanceID: 0}
+  - sonidoGolpeEnemigo: {fileID: 8300000, guid: 807177c892685ca4784bb070dcb111b3,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

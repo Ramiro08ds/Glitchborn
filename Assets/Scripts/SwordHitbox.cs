@@ -55,7 +55,6 @@ public class SwordHitbox : MonoBehaviour
         col.enabled = false;
     }
 
-    // NUEVO: Método para obtener cuántos enemigos golpeó en este swing
     public int GetHitCount()
     {
         return damagedThisSwing.Count;
@@ -111,6 +110,11 @@ public class SwordHitbox : MonoBehaviour
         int damage = owner.GetDamage();
         eh.TakeDamage(damage);
 
+        // NUEVO: Reproducir sonido de golpe usando AudioManager
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.SonidoPlayerGolpeaEnemigo();
+        }
 
         // Feedback de daño del jugador
         if (PlayerHitFeedback.instance != null)

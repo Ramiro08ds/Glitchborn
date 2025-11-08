@@ -11,58 +11,61 @@ public class AudioManager : MonoBehaviour
     [Header("=== MÚSICA ===")]
     [Tooltip("Música de fondo para el nivel (cueva)")]
     public AudioClip musicaCueva;
-    
+
     [Tooltip("Música del menú principal")]
     public AudioClip musicaMenu;
-    
+
     [Tooltip("Música de Game Over")]
     public AudioClip musicaGameOver;
 
     [Header("=== SONIDOS DEL JUGADOR ===")]
     [Tooltip("Sonido de pasos (se reproduce en loop mientras camina)")]
     public AudioClip sonidoPasos;
-    
+
     [Tooltip("Sonido del salto")]
     public AudioClip sonidoSalto;
-    
+
     [Tooltip("Sonido al aterrizar después de un salto")]
     public AudioClip sonidoAterrizaje;
-    
+
     [Tooltip("Sonido del ataque con espada (swoosh)")]
     public AudioClip sonidoAtaqueEspada;
-    
+
+    [Tooltip("Sonido cuando el jugador golpea a un enemigo (impacto)")]
+    public AudioClip sonidoPlayerGolpeaEnemigo;
+
     [Tooltip("Sonido cuando el jugador recibe daño")]
     public AudioClip sonidoPlayerDamage;
-    
+
     [Tooltip("Sonido de muerte del jugador")]
     public AudioClip sonidoPlayerMuerte;
-    
+
     [Tooltip("Sonido al subir de nivel")]
     public AudioClip sonidoLevelUp;
 
     [Header("=== SONIDOS DE ENEMIGOS ===")]
     [Tooltip("Sonido cuando un enemigo recibe daño")]
     public AudioClip sonidoEnemyDamage;
-    
+
     [Tooltip("Sonido de muerte de enemigo")]
     public AudioClip sonidoEnemyMuerte;
-    
+
     [Tooltip("Sonido de ataque del enemigo cuerpo a cuerpo")]
     public AudioClip sonidoEnemyAttack;
-    
+
     [Tooltip("Sonido de disparo del enemigo mago")]
     public AudioClip sonidoEnemyShoot;
-    
+
     [Tooltip("Sonido del proyectil al impactar")]
     public AudioClip sonidoProyectilImpacto;
 
     [Header("=== SONIDOS DE UI ===")]
     [Tooltip("Click en botones del menú")]
     public AudioClip sonidoBotonClick;
-    
+
     [Tooltip("Abrir menú de pausa")]
     public AudioClip sonidoAbrirMenu;
-    
+
     [Tooltip("Cerrar menú de pausa")]
     public AudioClip sonidoCerrarMenu;
 
@@ -73,7 +76,7 @@ public class AudioManager : MonoBehaviour
     [Header("=== CONFIGURACIÓN ===")]
     [Range(0f, 1f)]
     public float volumenMusica = 0.5f;
-    
+
     [Range(0f, 1f)]
     public float volumenSFX = 0.8f;
 
@@ -195,7 +198,7 @@ public class AudioManager : MonoBehaviour
     public void IniciarPasos()
     {
         if (sonidoPasos == null) return;
-        
+
         if (!pasosSource.isPlaying)
         {
             pasosSource.clip = sonidoPasos;
@@ -227,7 +230,8 @@ public class AudioManager : MonoBehaviour
     // ========== JUGADOR ==========
     public void SonidoPlayerSalto() => ReproducirSFX(sonidoSalto);
     public void SonidoPlayerAterrizaje() => ReproducirSFX(sonidoAterrizaje);
-    public void SonidoPlayerAtaque() => ReproducirSFX(sonidoAtaqueEspada);
+    public void SonidoPlayerAtaque() => sfxSource.PlayOneShot(sonidoAtaqueEspada, volumenSFX * 0.2f); // Swoosh más bajo (50%)
+    public void SonidoPlayerGolpeaEnemigo() => sfxSource.PlayOneShot(sonidoPlayerGolpeaEnemigo, volumenSFX * 1.2f); // Hit más alto (120%)
     public void SonidoPlayerDamage() => ReproducirSFX(sonidoPlayerDamage);
     public void SonidoPlayerMuerte() => ReproducirSFX(sonidoPlayerMuerte);
     public void SonidoLevelUp() => ReproducirSFX(sonidoLevelUp);

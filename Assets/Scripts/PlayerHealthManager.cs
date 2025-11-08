@@ -96,6 +96,9 @@ public class PlayerHealthManager : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthUI();
+        // NUEVO: Reproducir sonido de recibir daño
+        if (AudioManager.instance != null)
+            AudioManager.instance.SonidoPlayerDamage();
 
         if (PlayerHitFeedback.instance != null)
             PlayerHitFeedback.instance.OnPlayerDamaged();

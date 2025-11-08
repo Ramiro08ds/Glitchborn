@@ -218,6 +218,10 @@ public class PlayerLevelSystem : MonoBehaviour
         skillPoints += 2;
         xpToNextLevel = currentLevel;
 
+        // NUEVO: Reproducir sonido de level up
+        if (AudioManager.instance != null)
+            AudioManager.instance.SonidoLevelUp();
+
         Debug.Log("¡Subiste de nivel! Nivel: " + currentLevel);
         UpdateXPUI();
     }

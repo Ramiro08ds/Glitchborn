@@ -153,13 +153,13 @@ MonoBehaviour:
     type: 3}
   sonidoPlayerDamage: {fileID: 0}
   sonidoPlayerMuerte: {fileID: 0}
-  sonidoLevelUp: {fileID: 0}
+  sonidoLevelUp: {fileID: 8300000, guid: cd0aba5a2d304e740907632510951f7f, type: 3}
   sonidoEnemyDamage: {fileID: 0}
   sonidoEnemyMuerte: {fileID: 0}
   sonidoEnemyAttack: {fileID: 0}
   sonidoEnemyShoot: {fileID: 0}
   sonidoProyectilImpacto: {fileID: 0}
-  sonidoBotonClick: {fileID: 0}
+  sonidoBotonClick: {fileID: 8300000, guid: 925f60dec6cd0a846b8a19699c90a6cc, type: 3}
   sonidoAbrirMenu: {fileID: 0}
   sonidoCerrarMenu: {fileID: 0}
   sonidoAntorcha: {fileID: 0}

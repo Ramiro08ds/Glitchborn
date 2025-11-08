@@ -31,7 +31,7 @@ public class PlayerLevelUI : MonoBehaviour
     public PlayerHealthManager playerHealthManager;
 
     [Header("Stat Configuration")]
-    public int healthIncreasePerPoint = 5;  // Cambié a 5 como dijiste
+    public int healthIncreasePerPoint = 5;
     public int baseHealth = 100;  // Vida inicial
     public int baseVitLevel = 1;  // VIT empieza en nivel 1
 
@@ -73,11 +73,15 @@ public class PlayerLevelUI : MonoBehaviour
         }
 
         panel.SetActive(true);
-        UpdateUI();  // Actualizar UI al abrir para mostrar valores correctos
+        UpdateUI();
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         menuAbierto = true;
+
+        // NUEVO: Sonido de abrir menú
+        if (AudioManager.instance != null)
+            AudioManager.instance.SonidoAbrirMenu();
     }
 
     void CerrarMenu()
@@ -87,12 +91,20 @@ public class PlayerLevelUI : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         menuAbierto = false;
+
+        // NUEVO: Sonido de cerrar menú
+        if (AudioManager.instance != null)
+            AudioManager.instance.SonidoCerrarMenu();
     }
 
     void AddStrength()
     {
         if (playerLevel != null)
         {
+            // NUEVO: Sonido de click en botón
+            if (AudioManager.instance != null)
+                AudioManager.instance.SonidoBotonClick();
+
             playerLevel.UpgradeStrength();
             UpdateUI();
         }
@@ -102,13 +114,17 @@ public class PlayerLevelUI : MonoBehaviour
     {
         if (playerLevel != null && playerLevel.skillPoints > 0 && playerHealthManager != null)
         {
-            // ARREGLO 1: Primero guardamos la vida actual ANTES de modificar
+            // NUEVO: Sonido de click en botón
+            if (AudioManager.instance != null)
+                AudioManager.instance.SonidoBotonClick();
+
+            // Primero guardamos la vida actual ANTES de modificar
             int currentHealthBeforeUpgrade = playerHealthManager.CurrentHealth;
 
             // Subir el stat en el sistema de leveleo
             playerLevel.UpgradeMaxHealth();
 
-            // ARREGLO 2: Aumentar MaxHealth y CurrentHealth correctamente
+            // Aumentar MaxHealth y CurrentHealth correctamente
             playerHealthManager.MaxHealth += healthIncreasePerPoint;
             playerHealthManager.CurrentHealth = currentHealthBeforeUpgrade + healthIncreasePerPoint;
 
@@ -164,7 +180,7 @@ public class PlayerLevelUI : MonoBehaviour
         if (txtStrength != null)
             txtStrength.text = "STR: " + playerLevel.strength;
 
-        // VIT - ARREGLO 3: Empieza en nivel 1 en lugar de 0
+        // VIT - Empieza en nivel 1 en lugar de 0
         if (txtMaxHealth != null)
         {
             // Calcula cuántos puntos de VIT se invirtieron y suma el nivel base

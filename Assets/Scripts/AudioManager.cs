@@ -80,6 +80,20 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)]
     public float volumenSFX = 0.8f;
 
+    [Header("=== AJUSTES DE VOLUMEN ESPECÍFICOS ===")]
+    [Range(0f, 2f)]
+    [Tooltip("Multiplicador de volumen para el swoosh de la espada")]
+    public float volumenSwoosh = 0.5f;
+
+    [Range(0f, 2f)]
+    [Tooltip("Multiplicador de volumen para el impacto al golpear enemigo")]
+    public float volumenHitEnemigo = 1.2f;
+
+    [Header("=== AJUSTES DE PASOS ===")]
+    [Range(0.3f, 2f)]
+    [Tooltip("Velocidad de reproducción de los pasos (pitch). Menor = más lento")]
+    public float velocidadPasos = 0.5f;  // Mucho más lento (antes era 0.8)
+
     // AudioSources internos
     private AudioSource musicaSource;
     private AudioSource sfxSource;
@@ -202,6 +216,7 @@ public class AudioManager : MonoBehaviour
         if (!pasosSource.isPlaying)
         {
             pasosSource.clip = sonidoPasos;
+            pasosSource.pitch = velocidadPasos;  // NUEVO: Aplica la velocidad configurable
             pasosSource.Play();
         }
     }
@@ -220,7 +235,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void AjustarVelocidadPasos(bool estaCorriendo)
     {
-        pasosSource.pitch = estaCorriendo ? 1.3f : 1.0f;
+        // Corriendo solo un poco más rápido (1.15x en vez de 1.3x)
+        pasosSource.pitch = estaCorriendo ? velocidadPasos * 0.3f : velocidadPasos;
     }
 
     #endregion
@@ -230,8 +246,8 @@ public class AudioManager : MonoBehaviour
     // ========== JUGADOR ==========
     public void SonidoPlayerSalto() => ReproducirSFX(sonidoSalto);
     public void SonidoPlayerAterrizaje() => ReproducirSFX(sonidoAterrizaje);
-    public void SonidoPlayerAtaque() => sfxSource.PlayOneShot(sonidoAtaqueEspada, volumenSFX * 0.2f); // Swoosh más bajo (50%)
-    public void SonidoPlayerGolpeaEnemigo() => sfxSource.PlayOneShot(sonidoPlayerGolpeaEnemigo, volumenSFX * 1.2f); // Hit más alto (120%)
+    public void SonidoPlayerAtaque() => sfxSource.PlayOneShot(sonidoAtaqueEspada, volumenSFX * volumenSwoosh);
+    public void SonidoPlayerGolpeaEnemigo() => sfxSource.PlayOneShot(sonidoPlayerGolpeaEnemigo, volumenSFX * volumenHitEnemigo);
     public void SonidoPlayerDamage() => ReproducirSFX(sonidoPlayerDamage);
     public void SonidoPlayerMuerte() => ReproducirSFX(sonidoPlayerMuerte);
     public void SonidoLevelUp() => ReproducirSFX(sonidoLevelUp);

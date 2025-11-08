@@ -92,7 +92,7 @@ public class AudioManager : MonoBehaviour
     [Header("=== AJUSTES DE PASOS ===")]
     [Range(0.3f, 2f)]
     [Tooltip("Velocidad de reproducción de los pasos (pitch). Menor = más lento")]
-    public float velocidadPasos = 0.5f;  // Mucho más lento (antes era 0.8)
+    public float velocidadPasos = 1.0f;  // SIN PITCH - timing natural del audio
 
     // AudioSources internos
     private AudioSource musicaSource;
@@ -235,8 +235,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void AjustarVelocidadPasos(bool estaCorriendo)
     {
-        // Corriendo solo un poco más rápido (1.15x en vez de 1.3x)
-        pasosSource.pitch = estaCorriendo ? velocidadPasos * 0.3f : velocidadPasos;
+        // Corriendo 20% más rápido
+        pasosSource.pitch = estaCorriendo ? velocidadPasos * 1.2f : velocidadPasos;
     }
 
     #endregion

@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private bool wasGrounded;
     private bool isAttacking = false;
     private bool estaCaminando = false;
+    private bool estaCorriendo = false;  // NUEVO: Para trackear si está corriendo
 
     // --------------------------------------------------------
     // 🔹 INICIALIZACIÓN
@@ -76,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
 
             // Detener pasos si el menú está abierto
             AudioManager.instance?.DetenerPasos();
+            estaCaminando = false;
+            estaCorriendo = false;
             return true;
         }
         return false;
@@ -109,11 +112,8 @@ public class PlayerMovement : MonoBehaviour
     // --------------------------------------------------------
     private void HandleSprint()
     {
-        bool estaCorriendo = Input.GetKey(KeyCode.LeftShift) && isGrounded;
+        estaCorriendo = Input.GetKey(KeyCode.LeftShift) && isGrounded;
         currentSpeed = estaCorriendo ? sprintSpeed : walkSpeed;
-
-        if (estaCaminando && AudioManager.instance != null)
-            AudioManager.instance.AjustarVelocidadPasos(estaCorriendo);
     }
 
     private void HandleMovement()
@@ -136,15 +136,37 @@ public class PlayerMovement : MonoBehaviour
     // --------------------------------------------------------
     private void HandleFootsteps(float moveAmount)
     {
-        bool deberiaReproducirPasos = moveAmount > 0.1f;
+        bool deberiaReproducirPasos = moveAmount > 0.1f && isGrounded;
 
-        if (deberiaReproducirPasos && !estaCaminando)
+        if (deberiaReproducirPasos)
         {
-            AudioManager.instance?.IniciarPasos();
-            estaCaminando = true;
+            // NUEVO: Detectar cambio entre caminar y correr
+            if (estaCorriendo && !estaCaminando)
+            {
+                // Empezar a correr
+                AudioManager.instance?.IniciarPasosCorrer();
+                estaCaminando = true;
+            }
+            else if (!estaCorriendo && !estaCaminando)
+            {
+                // Empezar a caminar
+                AudioManager.instance?.IniciarPasos();
+                estaCaminando = true;
+            }
+            else if (estaCorriendo && estaCaminando)
+            {
+                // Ya está caminando, cambiar a correr
+                AudioManager.instance?.IniciarPasosCorrer();
+            }
+            else if (!estaCorriendo && estaCaminando)
+            {
+                // Ya está corriendo, cambiar a caminar
+                AudioManager.instance?.IniciarPasos();
+            }
         }
-        else if (!deberiaReproducirPasos && estaCaminando)
+        else if (estaCaminando)
         {
+            // Dejar de moverse
             AudioManager.instance?.DetenerPasos();
             estaCaminando = false;
         }

@@ -22,6 +22,9 @@ public class AudioManager : MonoBehaviour
     [Tooltip("Sonido de pasos (se reproduce en loop mientras camina)")]
     public AudioClip sonidoPasos;
 
+    [Tooltip("Sonido de pasos al correr (se reproduce en loop mientras corre)")]
+    public AudioClip sonidoPasosCorrer;
+
     [Tooltip("Sonido del salto")]
     public AudioClip sonidoSalto;
 
@@ -207,16 +210,48 @@ public class AudioManager : MonoBehaviour
     #region SONIDOS DE PASOS
 
     /// <summary>
-    /// Inicia el sonido de pasos (loop)
+    /// Inicia el sonido de pasos al caminar (loop)
     /// </summary>
     public void IniciarPasos()
     {
         if (sonidoPasos == null) return;
 
-        if (!pasosSource.isPlaying)
+        // Si ya está corriendo, detener primero
+        if (pasosSource.isPlaying && pasosSource.clip == sonidoPasosCorrer)
+        {
+            pasosSource.Stop();
+        }
+
+        if (!pasosSource.isPlaying || pasosSource.clip != sonidoPasos)
         {
             pasosSource.clip = sonidoPasos;
-            pasosSource.pitch = velocidadPasos;  // NUEVO: Aplica la velocidad configurable
+            pasosSource.pitch = velocidadPasos;
+            pasosSource.Play();
+        }
+    }
+
+    /// <summary>
+    /// Inicia el sonido de pasos al correr (loop)
+    /// </summary>
+    public void IniciarPasosCorrer()
+    {
+        // Si no hay audio de correr, usar el de caminar
+        if (sonidoPasosCorrer == null)
+        {
+            IniciarPasos();
+            return;
+        }
+
+        // Si ya está caminando, detener primero
+        if (pasosSource.isPlaying && pasosSource.clip == sonidoPasos)
+        {
+            pasosSource.Stop();
+        }
+
+        if (!pasosSource.isPlaying || pasosSource.clip != sonidoPasosCorrer)
+        {
+            pasosSource.clip = sonidoPasosCorrer;
+            pasosSource.pitch = velocidadPasos;
             pasosSource.Play();
         }
     }
@@ -228,15 +263,6 @@ public class AudioManager : MonoBehaviour
     {
         if (pasosSource != null && pasosSource.isPlaying)
             pasosSource.Stop();
-    }
-
-    /// <summary>
-    /// Ajusta el pitch de los pasos según la velocidad (caminar vs correr)
-    /// </summary>
-    public void AjustarVelocidadPasos(bool estaCorriendo)
-    {
-        // Corriendo 20% más rápido
-        pasosSource.pitch = estaCorriendo ? velocidadPasos * 1.2f : velocidadPasos;
     }
 
     #endregion

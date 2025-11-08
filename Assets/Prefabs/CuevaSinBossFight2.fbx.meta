@@ -1,56 +1,44 @@
 fileFormatVersion: 2
-guid: 813bb184a5659524caea0f2f54f02dca
+guid: 7c38d95eed816f74fa11966331e61c67
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Blanco
-    2100002: Oro
-    2100004: Material
-    2100006: Material.001
-    2100008: Rojo
-    2100010: Material.002
+    2100000: CUEVA
+    2100002: Metal
+    2100004: Ladrillo
+    2100006: Madera
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Trono
+    4300000: Cube
     2186277476908879412: ImportLogs
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Blanco
-    second: {fileID: 2100000, guid: d8cccb24b86b24546959466debcfcfe0, type: 2}
+      name: CUEVA
+    second: {fileID: 2100000, guid: 7f059eafd54e30c4b9b0b34f84b8cfcf, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: c7010d074a2ca1d459942e7c51bebdda, type: 2}
+      name: Ladrillo
+    second: {fileID: 2100000, guid: c1dd1a5e201906f44911f0df0a26cb42, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.001
-    second: {fileID: 2100000, guid: 7a20877bc082083468f55d974eb87051, type: 2}
+      name: Madera
+    second: {fileID: 2100000, guid: 252a8580a27be704bbb6263b411159f1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.002
-    second: {fileID: 2100000, guid: 7d10348fe3de9cd44a6eb4ebd6776433, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Oro
-    second: {fileID: 2100000, guid: 19db822592f13a241932376c843359cc, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Rojo
-    second: {fileID: 2100000, guid: 6d6a1cf1da2f40b4e95a08cdae0c8137, type: 2}
+      name: Metal
+    second: {fileID: 2100000, guid: 19d1d7e7dcb27094ea87cc9200f6326d, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: ParedBossfight3
-    second: {fileID: 2800000, guid: 859cabedc16024e4f96905e8283f70df, type: 3}
+      name: CuevaTextura
+    second: {fileID: 2800000, guid: 745929a74746bf24eb02f38deeff1f28, type: 3}
   materials:
     importMaterials: 1
     materialName: 0

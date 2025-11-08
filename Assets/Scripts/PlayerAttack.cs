@@ -9,6 +9,9 @@ public class PlayerAttack : MonoBehaviour
     public float hitboxActiveTime = 0.3f;       // Tiempo que el hitbox permanece activo
     public float comboResetTime = 1.5f;         // Tiempo para reiniciar el combo si no se encadena el siguiente ataque
 
+    [Header("Audio")]
+    public AudioClip sonidoEspadazoAire;        // NUEVO: Sonido cuando no le pega a nada
+
     [Header("Referencias")]
     public SwordHitbox swordHitbox;
     public Animator animator;                   // Asigna el Animator del Player
@@ -74,8 +77,17 @@ public class PlayerAttack : MonoBehaviour
         // Esperar mientras el hitbox está activo
         yield return new WaitForSeconds(hitboxActiveTime);
 
+        // NUEVO: Verificar si golpeó algo
+        bool hitSomething = swordHitbox.GetHitCount() > 0;
+
         // Desactivar hitbox
         swordHitbox.Disable();
+
+        // NUEVO: Si NO golpeó nada, reproducir sonido de espadazo al aire
+        if (!hitSomething && sonidoEspadazoAire != null && AudioManager.instance != null)
+        {
+            AudioManager.instance.ReproducirSFX(sonidoEspadazoAire);
+        }
 
         // Cooldown antes de permitir otro ataque
         yield return new WaitForSeconds(attackCooldown);
@@ -103,4 +115,3 @@ public class PlayerAttack : MonoBehaviour
         return Mathf.RoundToInt(damage);
     }
 }
-

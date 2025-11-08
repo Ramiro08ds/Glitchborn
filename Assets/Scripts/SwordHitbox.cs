@@ -55,6 +55,12 @@ public class SwordHitbox : MonoBehaviour
         col.enabled = false;
     }
 
+    // NUEVO: Método para obtener cuántos enemigos golpeó en este swing
+    public int GetHitCount()
+    {
+        return damagedThisSwing.Count;
+    }
+
     IEnumerator ActiveCheckRoutine()
     {
         if (checkInterval <= 0f)
@@ -104,7 +110,7 @@ public class SwordHitbox : MonoBehaviour
         // Daño según fuerza del jugador
         int damage = owner.GetDamage();
         eh.TakeDamage(damage);
-        
+
 
         // Feedback de daño del jugador
         if (PlayerHitFeedback.instance != null)
@@ -139,9 +145,9 @@ public class SwordHitbox : MonoBehaviour
                 Debug.Log("Hola");
                 yield break;
             }
-                
+
             Vector3 newPos = Vector3.Lerp(start, targetPos, elapsed / duration);
-            
+
             elapsed += Time.deltaTime;
             yield return null;
         }

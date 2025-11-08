@@ -147,7 +147,7 @@ MonoBehaviour:
   sonidoPasos: {fileID: 8300000, guid: ad8ae2f2a4585be409ac6159efb2ca52, type: 3}
   sonidoSalto: {fileID: 0}
   sonidoAterrizaje: {fileID: 0}
-  sonidoAtaqueEspada: {fileID: 0}
+  sonidoAtaqueEspada: {fileID: 8300000, guid: b494c4e061e63de4483a40c9ff56c8de, type: 3}
   sonidoPlayerDamage: {fileID: 0}
   sonidoPlayerMuerte: {fileID: 0}
   sonidoLevelUp: {fileID: 0}
@@ -1092,7 +1092,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00012207031, y: -0.00010681152}
+  m_AnchoredPosition: {x: -0.00012207031, y: -0.00012207031}
   m_SizeDelta: {x: 101.89, y: 397}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567797711

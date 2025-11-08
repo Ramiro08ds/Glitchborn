@@ -11,15 +11,15 @@ public class PlayerLevelUI : MonoBehaviour
 
     [Header("Health Bar")]
     public Slider healthBar;
-    public TextMeshProUGUI txtHealthIndicator;  // NUEVO: "65 / 100"
+    public TextMeshProUGUI txtHealthIndicator;  // "100 / 100"
 
     [Header("XP Bar")]
     public Slider xpBar;
-    public TextMeshProUGUI txtXPIndicator;  // NUEVO: "0 / 1"
+    public TextMeshProUGUI txtXPIndicator;  // "0 / 1"
 
-    [Header("Stats")]
-    public TextMeshProUGUI txtStrength;
-    public TextMeshProUGUI txtMaxHealth;
+    [Header("Stats - Ahora muestra NIVELES")]
+    public TextMeshProUGUI txtStrength;     // Muestra "STR: 1"
+    public TextMeshProUGUI txtMaxHealth;    // Muestra "VIT: 1" (nivel, no valor)
     public TextMeshProUGUI txtSkillPoints;
 
     [Header("Buttons")]
@@ -30,7 +30,10 @@ public class PlayerLevelUI : MonoBehaviour
     public PlayerLevelSystem playerLevel;
     public PlayerHealthManager playerHealthManager;
 
-    public int healthIncreasePerPoint = 3;
+    [Header("Stat Configuration")]
+    public int healthIncreasePerPoint = 5;  // Cambié a 5 como dijiste
+    public int baseHealth = 100;  // Vida inicial
+    public int baseVitLevel = 1;  // VIT empieza en nivel 1
 
     public bool menuAbierto = false;
 
@@ -70,7 +73,7 @@ public class PlayerLevelUI : MonoBehaviour
         }
 
         panel.SetActive(true);
-        UpdateUI();
+        UpdateUI();  // Actualizar UI al abrir para mostrar valores correctos
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -99,11 +102,19 @@ public class PlayerLevelUI : MonoBehaviour
     {
         if (playerLevel != null && playerLevel.skillPoints > 0 && playerHealthManager != null)
         {
+            // ARREGLO 1: Primero guardamos la vida actual ANTES de modificar
+            int currentHealthBeforeUpgrade = playerHealthManager.CurrentHealth;
+
+            // Subir el stat en el sistema de leveleo
             playerLevel.UpgradeMaxHealth();
 
-            // aumenta maxHealth y currentHealth proporcionalmente
+            // ARREGLO 2: Aumentar MaxHealth y CurrentHealth correctamente
             playerHealthManager.MaxHealth += healthIncreasePerPoint;
-            playerHealthManager.CurrentHealth += healthIncreasePerPoint;
+            playerHealthManager.CurrentHealth = currentHealthBeforeUpgrade + healthIncreasePerPoint;
+
+            // Asegurarse de que no exceda el máximo
+            if (playerHealthManager.CurrentHealth > playerHealthManager.MaxHealth)
+                playerHealthManager.CurrentHealth = playerHealthManager.MaxHealth;
 
             UpdateUI();
         }
@@ -127,14 +138,14 @@ public class PlayerLevelUI : MonoBehaviour
         if (txtLevel != null)
             txtLevel.text = playerLevel.currentLevel.ToString();
 
-        // BARRA DE VIDA
+        // BARRA DE VIDA - usa los valores REALES del PlayerHealthManager
         if (healthBar != null)
         {
             healthBar.maxValue = playerHealthManager.MaxHealth;
             healthBar.value = playerHealthManager.CurrentHealth;
         }
 
-        // NUEVO: Indicador numérico de vida "65 / 100"
+        // Indicador numérico de vida - usa los valores REALES
         if (txtHealthIndicator != null)
             txtHealthIndicator.text = $"{playerHealthManager.CurrentHealth} / {playerHealthManager.MaxHealth}";
 
@@ -145,15 +156,23 @@ public class PlayerLevelUI : MonoBehaviour
             xpBar.value = playerLevel.currentXP;
         }
 
-        // NUEVO: Indicador numérico de XP "0 / 1"
+        // Indicador numérico de XP
         if (txtXPIndicator != null)
             txtXPIndicator.text = $"{playerLevel.currentXP} / {playerLevel.xpToNextLevel}";
 
-        // Stats
+        // STR
         if (txtStrength != null)
-            txtStrength.text = "Fuerza: " + playerLevel.strength;
+            txtStrength.text = "STR: " + playerLevel.strength;
+
+        // VIT - ARREGLO 3: Empieza en nivel 1 en lugar de 0
         if (txtMaxHealth != null)
-            txtMaxHealth.text = "Vida Máx: " + playerHealthManager.MaxHealth;
+        {
+            // Calcula cuántos puntos de VIT se invirtieron y suma el nivel base
+            int vitPointsInvested = (playerHealthManager.MaxHealth - baseHealth) / healthIncreasePerPoint;
+            int vitLevel = baseVitLevel + vitPointsInvested;
+            txtMaxHealth.text = "VIT: " + vitLevel;
+        }
+
         if (txtSkillPoints != null)
             txtSkillPoints.text = "Puntos: " + playerLevel.skillPoints;
     }

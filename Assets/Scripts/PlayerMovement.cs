@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private bool wasGrounded;
     private bool isAttacking = false;
     private bool estaCaminando = false;
-    private bool estaCorriendo = false;  // NUEVO: Para trackear si está corriendo
+    private bool estaCorriendo = false;
 
     // --------------------------------------------------------
     // 🔹 INICIALIZACIÓN
@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (deberiaReproducirPasos)
         {
-            // NUEVO: Detectar cambio entre caminar y correr
+            // Detectar cambio entre caminar y correr
             if (estaCorriendo && !estaCaminando)
             {
                 // Empezar a correr
@@ -209,7 +209,8 @@ public class PlayerMovement : MonoBehaviour
     // --------------------------------------------------------
     private void HandleAttack()
     {
-        if (Input.GetMouseButtonDown(0) && !isAttacking)
+        // ARREGLO: NO atacar ni reproducir sonido si está corriendo
+        if (Input.GetMouseButtonDown(0) && !isAttacking && !estaCorriendo)
         {
             isAttacking = true;
             animator.SetTrigger("Attack");

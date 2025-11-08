@@ -144,9 +144,10 @@ MonoBehaviour:
   musicaCueva: {fileID: 0}
   musicaMenu: {fileID: 0}
   musicaGameOver: {fileID: 0}
-  sonidoPasos: {fileID: 8300000, guid: ad8ae2f2a4585be409ac6159efb2ca52, type: 3}
+  sonidoPasos: {fileID: 8300000, guid: d64688f165a1d6142b309378d6b4867d, type: 3}
+  sonidoPasosCorrer: {fileID: 8300000, guid: 3ce8bb7cd6908c0469e57165d0a8c92b, type: 3}
   sonidoSalto: {fileID: 0}
-  sonidoAterrizaje: {fileID: 0}
+  sonidoAterrizaje: {fileID: 8300000, guid: 32df810ac58588d46bbdef81611ba1b2, type: 3}
   sonidoAtaqueEspada: {fileID: 8300000, guid: b494c4e061e63de4483a40c9ff56c8de, type: 3}
   sonidoPlayerGolpeaEnemigo: {fileID: 8300000, guid: a09533530fbb4744ebe7f45c6bc8547e,
     type: 3}
@@ -164,6 +165,9 @@ MonoBehaviour:
   sonidoAntorcha: {fileID: 0}
   volumenMusica: 0.5
   volumenSFX: 0.8
+  volumenSwoosh: 0.5
+  volumenHitEnemigo: 1.2
+  velocidadPasos: 1
 --- !u!4 &135561372
 Transform:
   m_ObjectHideFlags: 0

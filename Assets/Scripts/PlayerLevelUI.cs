@@ -6,17 +6,27 @@ public class PlayerLevelUI : MonoBehaviour
 {
     public GameObject panel;
 
+    [Header("Level Display")]
     public TextMeshProUGUI txtLevel;
-    // txtXP eliminado - ya no se usa
-    public Slider xpBar;  // Cambiado de Image a Slider
 
+    [Header("Health Bar")]
+    public Slider healthBar;
+    public TextMeshProUGUI txtHealthIndicator;  // NUEVO: "65 / 100"
+
+    [Header("XP Bar")]
+    public Slider xpBar;
+    public TextMeshProUGUI txtXPIndicator;  // NUEVO: "0 / 1"
+
+    [Header("Stats")]
     public TextMeshProUGUI txtStrength;
     public TextMeshProUGUI txtMaxHealth;
     public TextMeshProUGUI txtSkillPoints;
 
+    [Header("Buttons")]
     public Button btnAddStrength;
     public Button btnAddMaxHealth;
 
+    [Header("References")]
     public PlayerLevelSystem playerLevel;
     public PlayerHealthManager playerHealthManager;
 
@@ -113,18 +123,33 @@ public class PlayerLevelUI : MonoBehaviour
             return;
         }
 
+        // Nivel - solo el número
         if (txtLevel != null)
-            txtLevel.text = "Nivel: " + playerLevel.currentLevel;
+            txtLevel.text = playerLevel.currentLevel.ToString();
 
-        // txtXP eliminado - ya no se usa
+        // BARRA DE VIDA
+        if (healthBar != null)
+        {
+            healthBar.maxValue = playerHealthManager.MaxHealth;
+            healthBar.value = playerHealthManager.CurrentHealth;
+        }
 
-        // Cambiado de fillAmount a value para Slider
+        // NUEVO: Indicador numérico de vida "65 / 100"
+        if (txtHealthIndicator != null)
+            txtHealthIndicator.text = $"{playerHealthManager.CurrentHealth} / {playerHealthManager.MaxHealth}";
+
+        // BARRA DE XP
         if (xpBar != null)
         {
             xpBar.maxValue = playerLevel.xpToNextLevel;
             xpBar.value = playerLevel.currentXP;
         }
 
+        // NUEVO: Indicador numérico de XP "0 / 1"
+        if (txtXPIndicator != null)
+            txtXPIndicator.text = $"{playerLevel.currentXP} / {playerLevel.xpToNextLevel}";
+
+        // Stats
         if (txtStrength != null)
             txtStrength.text = "Fuerza: " + playerLevel.strength;
         if (txtMaxHealth != null)

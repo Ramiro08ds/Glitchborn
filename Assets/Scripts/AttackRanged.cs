@@ -103,6 +103,10 @@ public class AttackRanged : MonoBehaviour
     {
         if (projectilePrefab == null || firePoint == null || player == null) return;
 
+        // NUEVO: Reproducir sonido de disparo AQUÍ
+        if (AudioManager.instance != null)
+            AudioManager.instance.SonidoEnemyShoot(firePoint.position);
+
         Vector3 direction = (player.position - firePoint.position).normalized;
         Vector3 spawnPos = firePoint.position + direction * 0.35f;
         Quaternion rot = Quaternion.LookRotation(direction);

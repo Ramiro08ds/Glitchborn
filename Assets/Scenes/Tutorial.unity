@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1622,6 +1622,64 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &368452792
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 368452795}
+  - component: {fileID: 368452794}
+  - component: {fileID: 368452793}
+  m_Layer: 0
+  m_Name: ZonaEnemies0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &368452793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368452792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411efb6bd20f2034591dcf9a19fe71f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneName: ZonaEnemies0
+--- !u!65 &368452794
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368452792}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 75.62329, y: 58.819736, z: 1}
+  m_Center: {x: -2.5634766, y: 17.559278, z: 0}
+--- !u!4 &368452795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368452792}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -263.44794, y: -18.77, z: 201.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 30
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &372155197
 GameObject:
   m_ObjectHideFlags: 0
@@ -2111,6 +2169,64 @@ MonoBehaviour:
   smoothSpeed: 5
   minY: -30
   maxY: 60
+--- !u!1 &556784981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 556784984}
+  - component: {fileID: 556784983}
+  - component: {fileID: 556784982}
+  m_Layer: 0
+  m_Name: ZonaEnemies2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &556784982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556784981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411efb6bd20f2034591dcf9a19fe71f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneName: ZonaEnemies2
+--- !u!65 &556784983
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556784981}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 75.62329, y: 58.819736, z: 1}
+  m_Center: {x: -2.5634766, y: 17.559278, z: 0}
+--- !u!4 &556784984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556784981}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -263.44794, y: -16.5, z: 168.69}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 28
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &625250345
 GameObject:
   m_ObjectHideFlags: 0
@@ -2695,6 +2811,64 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &878696859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 878696862}
+  - component: {fileID: 878696861}
+  - component: {fileID: 878696860}
+  m_Layer: 0
+  m_Name: ZonaEnemies3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &878696860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878696859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411efb6bd20f2034591dcf9a19fe71f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneName: ZonaEnemies3
+--- !u!65 &878696861
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878696859}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 75.62329, y: 58.819736, z: 1}
+  m_Center: {x: -2.5634766, y: 17.559278, z: 0}
+--- !u!4 &878696862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878696859}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -263.44794, y: -18.77, z: 153.74}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 27
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &935606390
 GameObject:
   m_ObjectHideFlags: 0
@@ -2916,7 +3090,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 999207020}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -263.44794, y: -18.77, z: 191}
+  m_LocalPosition: {x: -263.44794, y: -18.77, z: 184}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3697,6 +3871,64 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1302350500}
   m_CullTransparentMesh: 0
+--- !u!1 &1309692458
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1309692461}
+  - component: {fileID: 1309692460}
+  - component: {fileID: 1309692459}
+  m_Layer: 0
+  m_Name: ZonaEnemies4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1309692459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309692458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411efb6bd20f2034591dcf9a19fe71f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoneName: ZonaEnemies4
+--- !u!65 &1309692460
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309692458}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 75.62329, y: 58.819736, z: 1}
+  m_Center: {x: -2.5634766, y: 17.559278, z: 0}
+--- !u!4 &1309692461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309692458}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -263.44794, y: -18.77, z: 139.79}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 29
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1471583668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4676,6 +4908,30 @@ MonoBehaviour:
   - zoneName: ZonaEnemies1
     spawnPositions:
     - {fileID: 999207023}
+    enemyPrefabs:
+    - {fileID: 2104586629711871285, guid: 713d00ee79660f247a6d79f2732a59fd, type: 3}
+    - {fileID: 2842339577327033513, guid: dfe719cbbf9d63f4abc6f773a2f61c9a, type: 3}
+  - zoneName: ZonaEnemies3
+    spawnPositions:
+    - {fileID: 878696862}
+    enemyPrefabs:
+    - {fileID: 2104586629711871285, guid: 713d00ee79660f247a6d79f2732a59fd, type: 3}
+    - {fileID: 2842339577327033513, guid: dfe719cbbf9d63f4abc6f773a2f61c9a, type: 3}
+  - zoneName: ZonaEnemies2
+    spawnPositions:
+    - {fileID: 556784984}
+    enemyPrefabs:
+    - {fileID: 2104586629711871285, guid: 713d00ee79660f247a6d79f2732a59fd, type: 3}
+    - {fileID: 2842339577327033513, guid: dfe719cbbf9d63f4abc6f773a2f61c9a, type: 3}
+  - zoneName: ZonaEnemies4
+    spawnPositions:
+    - {fileID: 1309692461}
+    enemyPrefabs:
+    - {fileID: 2104586629711871285, guid: 713d00ee79660f247a6d79f2732a59fd, type: 3}
+    - {fileID: 2842339577327033513, guid: dfe719cbbf9d63f4abc6f773a2f61c9a, type: 3}
+  - zoneName: ZonaEnemies0
+    spawnPositions:
+    - {fileID: 368452795}
     enemyPrefabs:
     - {fileID: 2104586629711871285, guid: 713d00ee79660f247a6d79f2732a59fd, type: 3}
     - {fileID: 2842339577327033513, guid: dfe719cbbf9d63f4abc6f773a2f61c9a, type: 3}

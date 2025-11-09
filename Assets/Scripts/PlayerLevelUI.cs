@@ -26,9 +26,9 @@ public class PlayerLevelUI : MonoBehaviour
     public Button btnAddStrength;
     public Button btnAddMaxHealth;
 
-    [Header("Button Shake Components")]
-    public ButtonShake shakeStrength;
-    public ButtonShake shakeMaxHealth;
+    [Header("Button Shake Components")] // NUEVO
+    public ButtonShake shakeStrength;   // NUEVO
+    public ButtonShake shakeMaxHealth;  // NUEVO
 
     [Header("References")]
     public PlayerLevelSystem playerLevel;
@@ -56,6 +56,7 @@ public class PlayerLevelUI : MonoBehaviour
         if (btnAddMaxHealth != null)
             btnAddMaxHealth.onClick.AddListener(AddMaxHealth);
 
+        // NUEVO: Buscar automáticamente los componentes ButtonShake si no están asignados
         if (shakeStrength == null && btnAddStrength != null)
             shakeStrength = btnAddStrength.GetComponent<ButtonShake>();
         if (shakeMaxHealth == null && btnAddMaxHealth != null)
@@ -118,6 +119,7 @@ public class PlayerLevelUI : MonoBehaviour
             }
             else
             {
+                // MODIFICADO: Agregar shake
                 if (AudioManager.instance != null)
                     AudioManager.instance.SonidoNoPuntos();
 
@@ -148,6 +150,7 @@ public class PlayerLevelUI : MonoBehaviour
             }
             else
             {
+                // MODIFICADO: Agregar shake
                 if (AudioManager.instance != null)
                     AudioManager.instance.SonidoNoPuntos();
 
@@ -192,16 +195,14 @@ public class PlayerLevelUI : MonoBehaviour
         if (txtXPIndicator != null)
             txtXPIndicator.text = $"{playerLevel.currentXP} / {playerLevel.xpToNextLevel}";
 
-        // MODIFICADO: Solo el número de fuerza
         if (txtStrength != null)
-            txtStrength.text = playerLevel.strength.ToString();
+            txtStrength.text = "STR: " + playerLevel.strength;
 
-        // MODIFICADO: Solo el número de vitalidad
         if (txtMaxHealth != null)
         {
             int vitPointsInvested = (playerHealthManager.MaxHealth - baseHealth) / healthIncreasePerPoint;
             int vitLevel = baseVitLevel + vitPointsInvested;
-            txtMaxHealth.text = vitLevel.ToString();
+            txtMaxHealth.text = "VIT: " + vitLevel;
         }
 
         if (txtSkillPoints != null)

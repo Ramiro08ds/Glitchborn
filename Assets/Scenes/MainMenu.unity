@@ -143,7 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicaCueva: {fileID: 0}
   musicaMenu: {fileID: 0}
-  musicaGameOver: {fileID: 0}
+  musicaGameOver: {fileID: 8300000, guid: 6aa223f2a50a8484f9a8a0a037dffd6a, type: 3}
   sonidoPasos: {fileID: 8300000, guid: d64688f165a1d6142b309378d6b4867d, type: 3}
   sonidoPasosCorrer: {fileID: 8300000, guid: 3ce8bb7cd6908c0469e57165d0a8c92b, type: 3}
   sonidoSalto: {fileID: 0}

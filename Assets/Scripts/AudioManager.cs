@@ -156,6 +156,16 @@ public class AudioManager : MonoBehaviour
         musicaSource.Play();
     }
 
+    public void ReproducirMusicaOneShot(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        if (musicaSource.clip == clip && musicaSource.isPlaying)
+            return; // Ya se está reproduciendo
+
+        musicaSource.PlayOneShot(clip);
+    }
+
     /// <summary>
     /// Detiene la música
     /// </summary>
@@ -306,7 +316,7 @@ public class AudioManager : MonoBehaviour
     // ========== MÚSICA POR ESCENA ==========
     public void ReproducirMusicaCueva() => ReproducirMusica(musicaCueva);
     public void ReproducirMusicaMenu() => ReproducirMusica(musicaMenu);
-    public void ReproducirMusicaGameOver() => ReproducirMusica(musicaGameOver);
+    public void ReproducirMusicaGameOver() => ReproducirMusicaOneShot(musicaGameOver);
 
     #endregion
 }

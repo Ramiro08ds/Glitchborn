@@ -5,6 +5,7 @@ using TMPro;
 public class PlayerHealthManager : MonoBehaviour
 {
     public static PlayerHealthManager instance;
+    private bool isDead = false;
 
     [Header("Stats")]
     public int maxHealth = 100;
@@ -131,8 +132,11 @@ public class PlayerHealthManager : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
+
+        isDead = true;
         if (AudioManager.instance != null)
-            AudioManager.instance.SonidoPlayerMuerte();
+            AudioManager.instance.ReproducirMusicaGameOver();
 
         Debug.Log("Jugador murio. Intentando llamar a GameManager...");
         if (GameManager.instance != null)

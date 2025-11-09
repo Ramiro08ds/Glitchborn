@@ -72,6 +72,9 @@ public class AudioManager : MonoBehaviour
     [Tooltip("Cerrar menú de pausa")]
     public AudioClip sonidoCerrarMenu;
 
+    [Tooltip("Sonido cuando no hay puntos disponibles")]
+    public AudioClip sonidoNoPuntos;
+
     [Header("=== SONIDOS AMBIENTALES ===")]
     [Tooltip("Sonido de antorchas (fuego)")]
     public AudioClip sonidoAntorcha;
@@ -154,16 +157,6 @@ public class AudioManager : MonoBehaviour
 
         musicaSource.clip = clip;
         musicaSource.Play();
-    }
-
-    public void ReproducirMusicaOneShot(AudioClip clip)
-    {
-        if (clip == null) return;
-
-        if (musicaSource.clip == clip && musicaSource.isPlaying)
-            return; // Ya se está reproduciendo
-
-        musicaSource.PlayOneShot(clip);
     }
 
     /// <summary>
@@ -312,11 +305,12 @@ public class AudioManager : MonoBehaviour
     public void SonidoBotonClick() => ReproducirSFX(sonidoBotonClick);
     public void SonidoAbrirMenu() => ReproducirSFX(sonidoAbrirMenu);
     public void SonidoCerrarMenu() => ReproducirSFX(sonidoCerrarMenu);
+    public void SonidoNoPuntos() => ReproducirSFX(sonidoNoPuntos);
 
     // ========== MÚSICA POR ESCENA ==========
     public void ReproducirMusicaCueva() => ReproducirMusica(musicaCueva);
     public void ReproducirMusicaMenu() => ReproducirMusica(musicaMenu);
-    public void ReproducirMusicaGameOver() => ReproducirMusicaOneShot(musicaGameOver);
+    public void ReproducirMusicaGameOver() => ReproducirMusica(musicaGameOver);
 
     #endregion
 }

@@ -79,7 +79,7 @@ public class PlayerLevelUI : MonoBehaviour
         Cursor.visible = true;
         menuAbierto = true;
 
-        // NUEVO: Sonido de abrir menú
+        // Sonido de abrir menú
         if (AudioManager.instance != null)
             AudioManager.instance.SonidoAbrirMenu();
     }
@@ -92,7 +92,7 @@ public class PlayerLevelUI : MonoBehaviour
         Cursor.visible = false;
         menuAbierto = false;
 
-        // NUEVO: Sonido de cerrar menú
+        // Sonido de cerrar menú
         if (AudioManager.instance != null)
             AudioManager.instance.SonidoCerrarMenu();
     }
@@ -101,38 +101,58 @@ public class PlayerLevelUI : MonoBehaviour
     {
         if (playerLevel != null)
         {
-            // NUEVO: Sonido de click en botón
-            if (AudioManager.instance != null)
-                AudioManager.instance.SonidoBotonClick();
+            // Verificar si tiene puntos disponibles
+            if (playerLevel.skillPoints > 0)
+            {
+                // Sonido de éxito
+                if (AudioManager.instance != null)
+                    AudioManager.instance.SonidoBotonClick();
 
-            playerLevel.UpgradeStrength();
-            UpdateUI();
+                playerLevel.UpgradeStrength();
+                UpdateUI();
+            }
+            else
+            {
+                // Sonido de error/no disponible
+                if (AudioManager.instance != null)
+                    AudioManager.instance.SonidoNoPuntos();
+            }
         }
     }
 
     void AddMaxHealth()
     {
-        if (playerLevel != null && playerLevel.skillPoints > 0 && playerHealthManager != null)
+        if (playerLevel != null && playerHealthManager != null)
         {
-            // NUEVO: Sonido de click en botón
-            if (AudioManager.instance != null)
-                AudioManager.instance.SonidoBotonClick();
+            // Verificar si tiene puntos disponibles
+            if (playerLevel.skillPoints > 0)
+            {
+                // Sonido de éxito
+                if (AudioManager.instance != null)
+                    AudioManager.instance.SonidoBotonClick();
 
-            // Primero guardamos la vida actual ANTES de modificar
-            int currentHealthBeforeUpgrade = playerHealthManager.CurrentHealth;
+                // Primero guardamos la vida actual ANTES de modificar
+                int currentHealthBeforeUpgrade = playerHealthManager.CurrentHealth;
 
-            // Subir el stat en el sistema de leveleo
-            playerLevel.UpgradeMaxHealth();
+                // Subir el stat en el sistema de leveleo
+                playerLevel.UpgradeMaxHealth();
 
-            // Aumentar MaxHealth y CurrentHealth correctamente
-            playerHealthManager.MaxHealth += healthIncreasePerPoint;
-            playerHealthManager.CurrentHealth = currentHealthBeforeUpgrade + healthIncreasePerPoint;
+                // Aumentar MaxHealth y CurrentHealth correctamente
+                playerHealthManager.MaxHealth += healthIncreasePerPoint;
+                playerHealthManager.CurrentHealth = currentHealthBeforeUpgrade + healthIncreasePerPoint;
 
-            // Asegurarse de que no exceda el máximo
-            if (playerHealthManager.CurrentHealth > playerHealthManager.MaxHealth)
-                playerHealthManager.CurrentHealth = playerHealthManager.MaxHealth;
+                // Asegurarse de que no exceda el máximo
+                if (playerHealthManager.CurrentHealth > playerHealthManager.MaxHealth)
+                    playerHealthManager.CurrentHealth = playerHealthManager.MaxHealth;
 
-            UpdateUI();
+                UpdateUI();
+            }
+            else
+            {
+                // Sonido de error/no disponible
+                if (AudioManager.instance != null)
+                    AudioManager.instance.SonidoNoPuntos();
+            }
         }
     }
 

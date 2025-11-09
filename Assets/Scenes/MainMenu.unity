@@ -153,7 +153,10 @@ MonoBehaviour:
     type: 3}
   sonidosPlayerDamage:
   - {fileID: 8300000, guid: 726dea3f8b0a1ac4d91e4fcbfc494c1d, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: ac786760e33a0e74bb0231031ed215f3, type: 3}
+  - {fileID: 8300000, guid: 2e990d8fc5fde87439f43ebb919961ab, type: 3}
+  - {fileID: 8300000, guid: ed70622218ed63640bf44cc05065858e, type: 3}
+  - {fileID: 8300000, guid: ff482bb0a7fd56c4b9d346df7b503acc, type: 3}
   sonidoPlayerMuerte: {fileID: 0}
   sonidoLevelUp: {fileID: 8300000, guid: cd0aba5a2d304e740907632510951f7f, type: 3}
   sonidoEnemyDamage: {fileID: 0}

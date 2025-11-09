@@ -162,11 +162,12 @@ MonoBehaviour:
   sonidoEnemyDamage: {fileID: 0}
   sonidoEnemyMuerte: {fileID: 0}
   sonidoEnemyAttack: {fileID: 0}
-  sonidoEnemyShoot: {fileID: 0}
+  sonidoEnemyShoot: {fileID: 8300000, guid: caa1acbf465c96746a00f692a03e8743, type: 3}
   sonidoProyectilImpacto: {fileID: 0}
   sonidoBotonClick: {fileID: 8300000, guid: 925f60dec6cd0a846b8a19699c90a6cc, type: 3}
   sonidoAbrirMenu: {fileID: 8300000, guid: b74ee0db093224543ad65ef52483c60f, type: 3}
   sonidoCerrarMenu: {fileID: 8300000, guid: b74ee0db093224543ad65ef52483c60f, type: 3}
+  sonidoNoPuntos: {fileID: 8300000, guid: 7fe9c5f6d4f681845892ffbca70e0b6f, type: 3}
   sonidoAntorcha: {fileID: 0}
   volumenMusica: 0.5
   volumenSFX: 0.8

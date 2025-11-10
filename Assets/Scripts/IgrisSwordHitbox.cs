@@ -17,7 +17,6 @@ public class IgrisSwordHitbox : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage);
-                Debug.Log($"Igris golpeó al jugador por {damage} de daño.");
             }
         }
     }

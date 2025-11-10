@@ -1,113 +1,97 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(Animator))]
 public class IgrisMovement : MonoBehaviour
 {
     [Header("Referencias")]
     public Transform target;
     public Transform throne;
+
     private NavMeshAgent agent;
-    private Animator animator;
+    private EnemyAnimatorController animatorController;
 
     [Header("Configuración")]
     public float detectionRange = 15f;
     public float stoppingDistance = 2.5f;
     public float standUpDuration = 2f;
+    public float sitDownDuration = 1.5f;
 
     private bool isSitting = true;
-    private bool isStunned = false;
     private bool isStandingUp = false;
+    private bool isStunned = false;
+    private bool isMoving = false;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        if (animator == null)
-            animator = GetComponentInChildren<Animator>();
+        animatorController = GetComponent<EnemyAnimatorController>();
 
-        // Buscar el trono automáticamente si no está asignado
         if (throne == null)
         {
             GameObject throneObj = GameObject.Find("ElTrono");
-            if (throneObj != null)
-                throne = throneObj.transform;
+            if (throneObj != null) throne = throneObj.transform;
         }
 
-        // Estado inicial
         agent.isStopped = true;
-        animator.SetBool("IsSitting", true);
-        animator.SetBool("IsMoving", false);
-        animator.SetBool("PlayerInRange", false);
-        animator.SetBool("IsStunned", false);
+        isSitting = true;
     }
 
     void Update()
     {
-        if (isStunned) return;
+        if (isStunned || isSitting) return;
 
-        // Buscar player si no lo tiene
         if (target == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-                target = playerObj.transform;
+            if (playerObj != null) target = playerObj.transform;
         }
 
         if (target == null) return;
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        // Si está sentado y el jugador se acerca, se levanta
-        if (isSitting && distance < detectionRange && !isStandingUp)
-        {
-            StartCoroutine(StandUpSequence());
-        }
-
-        // Si ya está de pie, se mueve o ataca
-        if (!isSitting && !isStunned)
-        {
-            MoveTowardPlayer(distance);
-        }
-    }
-
-    void MoveTowardPlayer(float distance)
-    {
         if (distance > stoppingDistance)
         {
-            // Se mueve hacia el jugador
             agent.isStopped = false;
             agent.SetDestination(target.position);
-
-            animator.SetBool("IsMoving", true);
-            animator.SetBool("PlayerInRange", false);
+            isMoving = true;
         }
         else
         {
-            // Llega al rango de ataque
             agent.isStopped = true;
-
-            animator.SetBool("IsMoving", false);
-            animator.SetBool("PlayerInRange", true);
+            isMoving = false;
         }
 
-        // Si el jugador se aleja mucho, vuelve al trono
+        // Volver al trono si el jugador se aleja demasiado
         if (distance > detectionRange * 2 && !isSitting && !isStandingUp)
         {
             StartCoroutine(SitDownSequence());
         }
     }
 
+    public bool IsMoving() => isMoving;
+    public bool IsSitting() => isSitting;
+
+    public void SetStunned(bool state)
+    {
+        isStunned = state;
+        agent.isStopped = state;
+        isMoving = !state;
+    }
+
+    public void StandUp()
+    {
+        if (isStandingUp || !isSitting) return;
+        StartCoroutine(StandUpSequence());
+    }
+
     IEnumerator StandUpSequence()
     {
         isStandingUp = true;
         agent.isStopped = true;
-
-        animator.SetBool("IsSitting", false);
-        animator.SetTrigger("StandUp");
-
+        animatorController.PlayStandUp();
         yield return new WaitForSeconds(standUpDuration);
 
         isSitting = false;
@@ -119,45 +103,13 @@ public class IgrisMovement : MonoBehaviour
     {
         isStandingUp = true;
         agent.isStopped = true;
-
-        animator.SetBool("IsMoving", false);
-        animator.SetBool("PlayerInRange", false);
-        animator.SetBool("IsSitting", true);
-
-        yield return new WaitForSeconds(1.5f);
-
+        isMoving = false;
         isSitting = true;
+
+        yield return new WaitForSeconds(sitDownDuration);
+
+        if (throne != null) agent.Warp(throne.position);
         isStandingUp = false;
         agent.isStopped = true;
-
-        // Teletransporta de vuelta al trono (opcional)
-        if (throne != null)
-            agent.Warp(throne.position);
-    }
-
-    // 🔥 Llamado por IgrisHealth cuando baja a cierta vida o recibe aturdimiento
-    public void SetStunned(bool state)
-    {
-        isStunned = state;
-        agent.isStopped = state;
-        animator.SetBool("IsStunned", state);
-
-        if (state)
-        {
-            animator.SetBool("IsMoving", false);
-            animator.SetBool("PlayerInRange", false);
-        }
-    }
-
-    // 🔥 Llamado por IgrisHealth cuando muere
-    public void Die()
-    {
-        agent.isStopped = true;
-        animator.SetTrigger("Die");
-    }
-
-    public bool IsStunned()
-    {
-        return isStunned;
     }
 }

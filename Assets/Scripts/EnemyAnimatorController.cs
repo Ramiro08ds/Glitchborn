@@ -30,12 +30,12 @@ public class EnemyAnimatorController : MonoBehaviour
         if (isDead || animator == null) return;
 
         // 🔹 Estado de aturdimiento
-        bool isStunned = igrisMovement != null && igrisMovement.IsStunned();
+        bool isStunned = igrisMovement != null && igrisMovement.IsStunned;
         animator.SetBool("IsStunned", isStunned);
         if (isStunned) return;
 
         // 🔹 Movimiento
-        bool isMoving = igrisMovement != null && igrisMovement.IsMoving();
+        bool isMoving = igrisMovement != null && igrisMovement.IsMoving;
         animator.SetBool("IsMoving", isMoving);
 
         // 🔹 Jugador en rango para atacar
@@ -43,7 +43,7 @@ public class EnemyAnimatorController : MonoBehaviour
         animator.SetBool("PlayerInRange", playerInRange);
 
         // 🔹 Sentado o de pie
-        bool isSitting = igrisMovement != null && igrisMovement.IsSitting();
+        bool isSitting = igrisMovement != null && igrisMovement.IsSitting;
         animator.SetBool("IsSitting", isSitting);
     }
 

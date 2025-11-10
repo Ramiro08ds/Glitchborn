@@ -33,7 +33,7 @@ public class IgrisAttack : MonoBehaviour
 
     void Update()
     {
-        if (movementScript.IsSitting() || movementScript.IsStunned() || !canAttack) return;
+        if (movementScript.IsSitting || movementScript.IsStunned || !canAttack) return;
         if (movementScript == null || animatorController == null) return;
 
         Transform target = movementScript.target;

@@ -9,7 +9,7 @@ public class IgrisMovement : MonoBehaviour
     public Transform target;
     public Transform throne;
 
-    private NavMeshAgent agent;
+    public NavMeshAgent agent;
     private EnemyAnimatorController animatorController;
 
     [Header("Configuración")]
@@ -18,10 +18,20 @@ public class IgrisMovement : MonoBehaviour
     public float standUpDuration = 2f;
     public float sitDownDuration = 1.5f;
 
-    private bool isSitting = true;
-    private bool isStandingUp = false;
-    private bool isStunned = false;
-    private bool isMoving = false;
+    private bool _isSitting = true;
+    private bool _isStandingUp = false;
+    private bool _isStunned = false;
+    private bool _isMoving = false;
+
+
+    #region Public API 
+
+    public bool IsStunned => _isStunned;
+    public bool IsStandingUp => _isStandingUp;
+    public bool IsMoving => _isMoving;
+    public bool IsSitting => _isSitting;
+
+    #endregion
 
     void Start()
     {
@@ -35,12 +45,40 @@ public class IgrisMovement : MonoBehaviour
         }
 
         agent.isStopped = true;
-        isSitting = true;
+        _isSitting = true;
     }
 
     void Update()
     {
-        if (isStunned || isSitting) return;
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        if (!ValidateBehavior(distance)) {
+            _isMoving = false;
+        };
+
+
+        agent.SetDestination(target.position);
+        _isMoving = true;
+
+        // Volver al trono si el jugador se aleja demasiado
+        if (distance > detectionRange * 2 && !_isSitting && !_isStandingUp)
+        {
+            StartCoroutine(SitDownSequence());
+        }
+    }
+
+    public void SetStunned(bool state)
+    {
+        _isStunned = state;
+        agent.isStopped = state;
+        _isMoving = !state;
+    }
+
+    private bool ValidateBehavior(float dist)
+    {
+
+        if (dist > detectionRange && !_isStunned) return true;
+        if (_isStunned || _isSitting) return false;
 
         if (target == null)
         {
@@ -48,68 +86,40 @@ public class IgrisMovement : MonoBehaviour
             if (playerObj != null) target = playerObj.transform;
         }
 
-        if (target == null) return;
+        if (target == null) return false;
 
-        float distance = Vector3.Distance(transform.position, target.position);
-
-        if (distance > stoppingDistance)
-        {
-            agent.isStopped = false;
-            agent.SetDestination(target.position);
-            isMoving = true;
-        }
-        else
-        {
-            agent.isStopped = true;
-            isMoving = false;
-        }
-
-        // Volver al trono si el jugador se aleja demasiado
-        if (distance > detectionRange * 2 && !isSitting && !isStandingUp)
-        {
-            StartCoroutine(SitDownSequence());
-        }
-    }
-
-    public bool IsMoving() => isMoving;
-    public bool IsSitting() => isSitting;
-
-    public void SetStunned(bool state)
-    {
-        isStunned = state;
-        agent.isStopped = state;
-        isMoving = !state;
+        return true;
     }
 
     public void StandUp()
     {
-        if (isStandingUp || !isSitting) return;
+        if (_isStandingUp || !_isSitting) return;
         StartCoroutine(StandUpSequence());
     }
 
     IEnumerator StandUpSequence()
     {
-        isStandingUp = true;
+        _isStandingUp = true;
         agent.isStopped = true;
         animatorController.PlayStandUp();
         yield return new WaitForSeconds(standUpDuration);
 
-        isSitting = false;
-        isStandingUp = false;
+        _isSitting = false;
+        _isStandingUp = false;
         agent.isStopped = false;
     }
 
     IEnumerator SitDownSequence()
     {
-        isStandingUp = true;
+        _isStandingUp = true;
         agent.isStopped = true;
-        isMoving = false;
-        isSitting = true;
+        _isMoving = false;
+        _isSitting = true;
 
         yield return new WaitForSeconds(sitDownDuration);
 
         if (throne != null) agent.Warp(throne.position);
-        isStandingUp = false;
+        _isStandingUp = false;
         agent.isStopped = true;
     }
 }

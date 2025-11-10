@@ -329,7 +329,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &81336579
 GameObject:
@@ -2443,7 +2443,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511064952
 GameObject:
@@ -2848,7 +2848,7 @@ PrefabInstance:
     - target: {fileID: 1735091375613042933, guid: 713d00ee79660f247a6d79f2732a59fd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1735091375613042933, guid: 713d00ee79660f247a6d79f2732a59fd,
         type: 3}
@@ -3879,7 +3879,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1023148303
 GameObject:
@@ -4907,7 +4907,7 @@ GameObject:
   - component: {fileID: 1447740895}
   - component: {fileID: 1447740894}
   m_Layer: 5
-  m_Name: TMP SubMeshUI [futrst SDF + LiberationSans SDF Atlas]
+  m_Name: TMP SubMeshUI [futrst SDF Material + LiberationSans SDF Atlas]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4955,7 +4955,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 8.5625
+  m_padding: 1.25
   m_canvasRenderer: {fileID: 1447740895}
   m_TextComponent: {fileID: 1584170326}
   m_materialReferenceIndex: 1
@@ -5080,7 +5080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 75c327bb742180744968bb099af30e9e, type: 3}
       propertyPath: m_RootOrder
-      value: 23
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 75c327bb742180744968bb099af30e9e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5555,7 +5555,8 @@ MonoBehaviour:
   m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1c1202fba3046e74a964269ba7df52d7, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 4bd58a20f4aecb9499024d3aa7d16f7b, type: 2}
+  m_sharedMaterial: {fileID: 21142887045794464, guid: 1c1202fba3046e74a964269ba7df52d7,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5677,7 +5678,7 @@ RectTransform:
   - {fileID: 625250346}
   - {fileID: 1852678112}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6134,7 +6135,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1615306197
 GameObject:
@@ -6868,7 +6869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 75c327bb742180744968bb099af30e9e, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 75c327bb742180744968bb099af30e9e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6999,7 +7000,7 @@ Transform:
   - {fileID: 511064953}
   - {fileID: 1159723820}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1840210792 stripped
 GameObject:
@@ -7825,7 +7826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e9ad1a88bca9b1b4f9f0fe52eeed7ffc, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e9ad1a88bca9b1b4f9f0fe52eeed7ffc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8127,7 +8128,7 @@ PrefabInstance:
     - target: {fileID: 1735091375613042933, guid: 713d00ee79660f247a6d79f2732a59fd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 1735091375613042933, guid: 713d00ee79660f247a6d79f2732a59fd,
         type: 3}
@@ -8355,7 +8356,7 @@ PrefabInstance:
     - target: {fileID: 8115438333224384774, guid: 911b629f5bb158e4da199b9226144a25,
         type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8115438333224384774, guid: 911b629f5bb158e4da199b9226144a25,
         type: 3}

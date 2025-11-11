@@ -222,6 +222,10 @@ public class PlayerLevelSystem : MonoBehaviour
         if (AudioManager.instance != null)
             AudioManager.instance.SonidoLevelUp();
 
+        // NUEVO: Actualizar nivel en GameManager
+        if (GameManager.instance != null)
+            GameManager.instance.ActualizarNivel(currentLevel);
+
         Debug.Log("¡Subiste de nivel! Nivel: " + currentLevel);
         UpdateXPUI();
     }

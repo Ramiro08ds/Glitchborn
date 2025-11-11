@@ -72,8 +72,13 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        // Dar XP y curación al jugador
         if (player != null)
             player.EnemyKilled(xpReward, healOnKill);
+
+        // NUEVO: Registrar enemigo eliminado en GameManager
+        if (GameManager.instance != null)
+            GameManager.instance.RegistrarEnemigoEliminado();
 
         Destroy(gameObject);
     }
@@ -84,4 +89,3 @@ public class EnemyHealth : MonoBehaviour
         player = p;
     }
 }
-

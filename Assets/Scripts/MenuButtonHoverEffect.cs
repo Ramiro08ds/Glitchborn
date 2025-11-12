@@ -4,19 +4,23 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 /// <summary>
-/// Efecto de botón del menú - VERSIÓN SIMPLE Y FUNCIONAL
-/// - Shine se mueve y entra/sale gradualmente (clipeado)
-/// - Fondo cambia de negro a transparente
+/// Efecto completo del botón:
+/// - Shine se mueve con entrada/salida gradual
+/// - Fondo se revela progresivamente (izq→der / der→izq)
 /// - Borde se ilumina
+/// - Glow aparece alrededor del botón
 /// </summary>
 public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("=== REFERENCIAS ===")]
-    [Tooltip("La imagen del fondo del botón")]
+    [Tooltip("Imagen del fondo del botón")]
     public Image buttonBackground;
 
-    [Tooltip("La imagen del borde del botón")]
+    [Tooltip("Imagen del borde del botón")]
     public Image buttonBorder;
+
+    [Tooltip("Imagen del glow (detrás del botón)")]
+    public Image buttonGlow;
 
     [Tooltip("Sprite del shine")]
     public Sprite shineSprite;
@@ -32,6 +36,13 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
     [Header("=== COLORES DEL BORDE ===")]
     public Color borderNormal = new Color(0.18f, 0.8f, 0.44f, 0.3f);
     public Color borderGlow = new Color(0.18f, 0.8f, 0.44f, 1f);
+
+    [Header("=== GLOW ALREDEDOR ===")]
+    [Tooltip("Color del glow (mismo que borde brillante pero con alpha)")]
+    public Color glowColorNormal = new Color(0.18f, 0.8f, 0.44f, 0f); // Invisible
+
+    [Tooltip("Color del glow brillante")]
+    public Color glowColorBright = new Color(0.18f, 0.8f, 0.44f, 0.6f); // Verde brillante
 
     [Header("=== CONFIGURACIÓN DEL SHINE ===")]
     public float shineDuration = 0.5f;
@@ -56,14 +67,19 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         buttonRect = GetComponent<RectTransform>();
 
+        // Auto-referencias
         if (buttonBackground == null)
+        {
             buttonBackground = transform.Find("Background")?.GetComponent<Image>();
-
-        if (buttonBackground == null)
-            buttonBackground = GetComponent<Image>();
+            if (buttonBackground == null)
+                buttonBackground = GetComponent<Image>();
+        }
 
         if (buttonBorder == null)
             buttonBorder = transform.Find("Border")?.GetComponent<Image>();
+
+        if (buttonGlow == null)
+            buttonGlow = transform.Find("Glow")?.GetComponent<Image>();
 
         originalPosition = buttonRect.anchoredPosition;
         targetPosition = originalPosition;
@@ -74,6 +90,11 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
 
         if (buttonBorder != null)
             buttonBorder.color = borderNormal;
+
+        if (buttonGlow != null)
+        {
+            buttonGlow.color = glowColorNormal; // Empieza invisible
+        }
 
         CreateShine();
     }
@@ -150,33 +171,50 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
         if (shineImage == null || buttonBackground == null) yield break;
 
         float buttonWidth = buttonRect.rect.width;
-
         shineImage.enabled = true;
 
         float elapsed = 0f;
+
+        // Posiciones del reveal progresivo
+        float revealStartX = 0f;
 
         while (elapsed < shineDuration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / shineDuration;
 
-            // Shine se mueve de izquierda a derecha (entra y sale)
+            // 1. SHINE se mueve (entra y sale)
             float shineX = Mathf.Lerp(-shineWidth / 2, buttonWidth + shineWidth / 2, t);
             shineRect.anchoredPosition = new Vector2(shineX, 0);
 
-            // Fondo se transparenta
-            buttonBackground.color = Color.Lerp(backgroundNormal, backgroundHover, t);
+            // 2. FONDO se transparenta PROGRESIVAMENTE de izquierda a derecha
+            // Calculamos qué parte del fondo ya "pasó" el shine
+            float revealProgress = Mathf.Clamp01((shineX - revealStartX) / buttonWidth);
 
-            // Borde se ilumina
+            // Interpolamos solo la parte revelada
+            Color currentBgColor = buttonBackground.color;
+            currentBgColor = Color.Lerp(backgroundNormal, backgroundHover, revealProgress);
+            buttonBackground.color = currentBgColor;
+
+            // 3. BORDE se ilumina
             if (buttonBorder != null)
                 buttonBorder.color = Color.Lerp(borderNormal, borderGlow, t);
+
+            // 4. GLOW aparece GRADUALMENTE junto con el borde
+            if (buttonGlow != null)
+            {
+                buttonGlow.color = Color.Lerp(glowColorNormal, glowColorBright, t);
+            }
 
             yield return null;
         }
 
+        // Estado final
         buttonBackground.color = backgroundHover;
         if (buttonBorder != null)
             buttonBorder.color = borderGlow;
+        if (buttonGlow != null)
+            buttonGlow.color = glowColorBright;
 
         shineImage.enabled = false;
         currentAnimation = null;
@@ -187,7 +225,6 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
         if (shineImage == null || buttonBackground == null) yield break;
 
         float buttonWidth = buttonRect.rect.width;
-
         shineImage.enabled = true;
 
         float elapsed = 0f;
@@ -197,23 +234,36 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
             elapsed += Time.deltaTime;
             float t = elapsed / shineDuration;
 
-            // Shine se mueve de derecha a izquierda (inverso)
+            // 1. SHINE se mueve de derecha a izquierda (inverso)
             float shineX = Mathf.Lerp(buttonWidth + shineWidth / 2, -shineWidth / 2, t);
             shineRect.anchoredPosition = new Vector2(shineX, 0);
 
-            // Fondo vuelve a negro
-            buttonBackground.color = Color.Lerp(backgroundHover, backgroundNormal, t);
+            // 2. FONDO vuelve a negro PROGRESIVAMENTE de derecha a izquierda
+            float revealProgress = Mathf.Clamp01((buttonWidth - shineX) / buttonWidth);
 
-            // Borde se apaga
+            Color currentBgColor = buttonBackground.color;
+            currentBgColor = Color.Lerp(backgroundHover, backgroundNormal, revealProgress);
+            buttonBackground.color = currentBgColor;
+
+            // 3. BORDE se apaga
             if (buttonBorder != null)
                 buttonBorder.color = Color.Lerp(borderGlow, borderNormal, t);
+
+            // 4. GLOW desaparece GRADUALMENTE junto con el borde
+            if (buttonGlow != null)
+            {
+                buttonGlow.color = Color.Lerp(glowColorBright, glowColorNormal, t);
+            }
 
             yield return null;
         }
 
+        // Estado final
         buttonBackground.color = backgroundNormal;
         if (buttonBorder != null)
             buttonBorder.color = borderNormal;
+        if (buttonGlow != null)
+            buttonGlow.color = glowColorNormal;
 
         shineImage.enabled = false;
         currentAnimation = null;

@@ -4,80 +4,78 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 /// <summary>
-/// Efecto de hover avanzado con trail de brillo y glow final
-/// Recrea el efecto del HTML donde el brillo deja estela y el botón brilla al final
+/// Efecto de botón del menú - VERSIÓN SIMPLE Y FUNCIONAL
+/// - Shine se mueve y entra/sale gradualmente (clipeado)
+/// - Fondo cambia de negro a transparente
+/// - Borde se ilumina
 /// </summary>
 public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [Header("Referencias")]
-    [Tooltip("RectTransform del botón")]
-    public RectTransform buttonRect;
+    [Header("=== REFERENCIAS ===")]
+    [Tooltip("La imagen del fondo del botón")]
+    public Image buttonBackground;
 
-    [Tooltip("Imagen del botón (background)")]
-    public Image buttonImage;
+    [Tooltip("La imagen del borde del botón")]
+    public Image buttonBorder;
 
-    [Tooltip("Imagen del ícono")]
-    public Image iconImage;
+    [Tooltip("Sprite del shine")]
+    public Sprite shineSprite;
 
-    [Header("Movimiento")]
-    [Tooltip("Desplazamiento en hover")]
+    [Header("=== MOVIMIENTO ===")]
     public float moveDistance = 10f;
-
-    [Tooltip("Velocidad de movimiento")]
     public float moveSpeed = 10f;
 
-    [Header("Colores")]
-    [Tooltip("Color normal del ícono")]
-    public Color normalIconColor = new Color(0.18f, 0.8f, 0.44f, 1f);
+    [Header("=== COLORES DEL FONDO ===")]
+    public Color backgroundNormal = new Color(0.1f, 0.1f, 0.1f, 0.8f);
+    public Color backgroundHover = new Color(0.1f, 0.1f, 0.1f, 0f);
 
-    [Tooltip("Color del ícono en hover")]
-    public Color hoverIconColor = Color.white;
+    [Header("=== COLORES DEL BORDE ===")]
+    public Color borderNormal = new Color(0.18f, 0.8f, 0.44f, 0.3f);
+    public Color borderGlow = new Color(0.18f, 0.8f, 0.44f, 1f);
 
-    [Tooltip("Color del brillo trail")]
-    public Color shineColor = new Color(1f, 1f, 1f, 0.2f);
-
-    [Tooltip("Color del brillo final")]
-    public Color finalGlowColor = new Color(1f, 1f, 1f, 0.3f);
-
-    [Header("Efecto de Brillo")]
-    [Tooltip("Duración del barrido")]
+    [Header("=== CONFIGURACIÓN DEL SHINE ===")]
     public float shineDuration = 0.5f;
+    public float shineWidth = 80f;
+    public Color shineColor = new Color(0.18f, 0.8f, 0.44f, 1f);
 
-    [Tooltip("Duración del fade out final")]
-    public float fadeOutDuration = 0.3f;
+    [Range(0f, 1f)]
+    public float shineOpacity = 0.8f;
 
-    [Tooltip("Ancho de la línea de brillo móvil")]
-    public float shineLineWidth = 50f;
-
+    private RectTransform buttonRect;
     private Vector2 originalPosition;
     private Vector2 targetPosition;
 
-    // Overlays para el efecto
-    private GameObject shineLineObject;
-    private Image shineLineImage;
+    private GameObject shineContainer;
+    private GameObject shineObject;
+    private Image shineImage;
+    private RectTransform shineRect;
 
-    private GameObject glowOverlay;
-    private Image glowOverlayImage;
+    private Coroutine currentAnimation;
 
     void Start()
     {
-        if (buttonRect == null)
-            buttonRect = GetComponent<RectTransform>();
+        buttonRect = GetComponent<RectTransform>();
 
-        if (buttonImage == null)
-            buttonImage = GetComponent<Image>();
+        if (buttonBackground == null)
+            buttonBackground = transform.Find("Background")?.GetComponent<Image>();
 
-        if (iconImage == null)
-            iconImage = transform.Find("Icon")?.GetComponent<Image>();
+        if (buttonBackground == null)
+            buttonBackground = GetComponent<Image>();
+
+        if (buttonBorder == null)
+            buttonBorder = transform.Find("Border")?.GetComponent<Image>();
 
         originalPosition = buttonRect.anchoredPosition;
         targetPosition = originalPosition;
 
-        // Crear objetos de efecto
-        CreateShineObjects();
+        // Estado inicial
+        if (buttonBackground != null)
+            buttonBackground.color = backgroundNormal;
 
-        if (iconImage != null)
-            iconImage.color = normalIconColor;
+        if (buttonBorder != null)
+            buttonBorder.color = borderNormal;
+
+        CreateShine();
     }
 
     void Update()
@@ -89,80 +87,72 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
         );
     }
 
+    void CreateShine()
+    {
+        if (buttonBackground == null) return;
+
+        // Contenedor con máscara
+        shineContainer = new GameObject("ShineContainer");
+        shineContainer.transform.SetParent(buttonBackground.transform, false);
+
+        RectMask2D rectMask = shineContainer.AddComponent<RectMask2D>();
+
+        RectTransform containerRect = shineContainer.GetComponent<RectTransform>();
+        containerRect.anchorMin = Vector2.zero;
+        containerRect.anchorMax = Vector2.one;
+        containerRect.offsetMin = Vector2.zero;
+        containerRect.offsetMax = Vector2.zero;
+
+        // Shine dentro del contenedor
+        shineObject = new GameObject("Shine");
+        shineObject.transform.SetParent(shineContainer.transform, false);
+
+        shineImage = shineObject.AddComponent<Image>();
+        shineImage.sprite = shineSprite;
+
+        Color color = shineColor;
+        color.a = shineOpacity;
+        shineImage.color = color;
+        shineImage.raycastTarget = false;
+
+        shineRect = shineObject.GetComponent<RectTransform>();
+        shineRect.anchorMin = new Vector2(0, 0);
+        shineRect.anchorMax = new Vector2(0, 1);
+        shineRect.pivot = new Vector2(0.5f, 0.5f);
+        shineRect.sizeDelta = new Vector2(shineWidth, 0);
+        shineRect.anchoredPosition = Vector2.zero;
+
+        shineImage.enabled = false;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         targetPosition = originalPosition + new Vector2(moveDistance, 0);
 
-        if (iconImage != null)
-            iconImage.color = hoverIconColor;
+        if (currentAnimation != null)
+            StopCoroutine(currentAnimation);
 
-        StartCoroutine(ShineTrailEffect());
+        currentAnimation = StartCoroutine(HoverIn());
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         targetPosition = originalPosition;
 
-        if (iconImage != null)
-            iconImage.color = normalIconColor;
+        if (currentAnimation != null)
+            StopCoroutine(currentAnimation);
 
-        StopAllCoroutines();
-
-        // Resetear efectos
-        if (shineLineImage != null)
-            shineLineImage.enabled = false;
-
-        if (glowOverlayImage != null)
-            glowOverlayImage.enabled = false;
+        currentAnimation = StartCoroutine(HoverOut());
     }
 
-    void CreateShineObjects()
+    IEnumerator HoverIn()
     {
-        // 1. Línea de brillo móvil
-        shineLineObject = new GameObject("ShineLine");
-        shineLineObject.transform.SetParent(buttonImage.transform, false);
+        if (shineImage == null || buttonBackground == null) yield break;
 
-        shineLineImage = shineLineObject.AddComponent<Image>();
-        shineLineImage.color = shineColor;
-        shineLineImage.raycastTarget = false;
-
-        RectTransform shineLineRect = shineLineObject.GetComponent<RectTransform>();
-        shineLineRect.anchorMin = new Vector2(0, 0);
-        shineLineRect.anchorMax = new Vector2(0, 1);
-        shineLineRect.pivot = new Vector2(0.5f, 0.5f);
-        shineLineRect.sizeDelta = new Vector2(shineLineWidth, 0);
-
-        shineLineImage.enabled = false;
-
-        // 2. Overlay de brillo completo (el que queda al final)
-        glowOverlay = new GameObject("GlowOverlay");
-        glowOverlay.transform.SetParent(buttonImage.transform, false);
-
-        glowOverlayImage = glowOverlay.AddComponent<Image>();
-        glowOverlayImage.color = finalGlowColor;
-        glowOverlayImage.raycastTarget = false;
-
-        RectTransform glowRect = glowOverlay.GetComponent<RectTransform>();
-        glowRect.anchorMin = Vector2.zero;
-        glowRect.anchorMax = Vector2.one;
-        glowRect.offsetMin = Vector2.zero;
-        glowRect.offsetMax = Vector2.zero;
-
-        glowOverlayImage.enabled = false;
-    }
-
-    IEnumerator ShineTrailEffect()
-    {
         float buttonWidth = buttonRect.rect.width;
 
-        // --- FASE 1: Barrido con trail ---
-        shineLineImage.enabled = true;
-        glowOverlayImage.enabled = true;
+        shineImage.enabled = true;
 
-        RectTransform shineLineRect = shineLineObject.GetComponent<RectTransform>();
-
-        float startX = 0f;
-        float endX = buttonWidth;
         float elapsed = 0f;
 
         while (elapsed < shineDuration)
@@ -170,44 +160,62 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
             elapsed += Time.deltaTime;
             float t = elapsed / shineDuration;
 
-            // Mover la línea de brillo
-            float currentX = Mathf.Lerp(startX, endX, t);
-            shineLineRect.anchoredPosition = new Vector2(currentX, 0);
+            // Shine se mueve de izquierda a derecha (entra y sale)
+            float shineX = Mathf.Lerp(-shineWidth / 2, buttonWidth + shineWidth / 2, t);
+            shineRect.anchoredPosition = new Vector2(shineX, 0);
 
-            // CLAVE: El glow overlay va apareciendo gradualmente
-            // simulando que el brillo "pinta" el botón
-            Color glowColor = finalGlowColor;
-            glowColor.a = finalGlowColor.a * t; // Fade in progresivo
-            glowOverlayImage.color = glowColor;
+            // Fondo se transparenta
+            buttonBackground.color = Color.Lerp(backgroundNormal, backgroundHover, t);
+
+            // Borde se ilumina
+            if (buttonBorder != null)
+                buttonBorder.color = Color.Lerp(borderNormal, borderGlow, t);
 
             yield return null;
         }
 
-        // --- FASE 2: Línea desaparece, queda el glow completo ---
-        shineLineImage.enabled = false;
+        buttonBackground.color = backgroundHover;
+        if (buttonBorder != null)
+            buttonBorder.color = borderGlow;
 
-        // El botón queda brillando
-        glowOverlayImage.color = finalGlowColor;
+        shineImage.enabled = false;
+        currentAnimation = null;
+    }
 
-        // Esperar un momento
-        yield return new WaitForSeconds(0.1f);
+    IEnumerator HoverOut()
+    {
+        if (shineImage == null || buttonBackground == null) yield break;
 
-        // --- FASE 3: Fade out del glow ---
-        elapsed = 0f;
+        float buttonWidth = buttonRect.rect.width;
 
-        while (elapsed < fadeOutDuration)
+        shineImage.enabled = true;
+
+        float elapsed = 0f;
+
+        while (elapsed < shineDuration)
         {
             elapsed += Time.deltaTime;
-            float t = elapsed / fadeOutDuration;
+            float t = elapsed / shineDuration;
 
-            Color glowColor = finalGlowColor;
-            glowColor.a = finalGlowColor.a * (1f - t); // Fade out
-            glowOverlayImage.color = glowColor;
+            // Shine se mueve de derecha a izquierda (inverso)
+            float shineX = Mathf.Lerp(buttonWidth + shineWidth / 2, -shineWidth / 2, t);
+            shineRect.anchoredPosition = new Vector2(shineX, 0);
+
+            // Fondo vuelve a negro
+            buttonBackground.color = Color.Lerp(backgroundHover, backgroundNormal, t);
+
+            // Borde se apaga
+            if (buttonBorder != null)
+                buttonBorder.color = Color.Lerp(borderGlow, borderNormal, t);
 
             yield return null;
         }
 
-        // Desactivar
-        glowOverlayImage.enabled = false;
+        buttonBackground.color = backgroundNormal;
+        if (buttonBorder != null)
+            buttonBorder.color = borderNormal;
+
+        shineImage.enabled = false;
+        currentAnimation = null;
     }
 }

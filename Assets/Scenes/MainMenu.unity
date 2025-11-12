@@ -561,7 +561,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_textAlignment: 514
-  m_characterSpacing: 0
+  m_characterSpacing: 8
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1222,15 +1222,39 @@ MonoBehaviour:
   buttonBorder: {fileID: 1900333348}
   buttonGlow: {fileID: 2104336583}
   shineSprite: {fileID: 21300000, guid: 6216589dd088e73418d6094be899ae7e, type: 3}
-  moveDistance: 5
-  moveSpeed: 100
+  moveDistance: 20
+  moveDuration: 0.3
+  moveEasing:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   backgroundNormal: {r: 0.1, g: 0.1, b: 0.1, a: 0.8}
   backgroundHover: {r: 0.1, g: 0.1, b: 0.1, a: 0}
   borderNormal: {r: 0.18, g: 0.8, b: 0.44, a: 0.3}
   borderGlow: {r: 0.18, g: 0.8, b: 0.44, a: 1}
   glowColorNormal: {r: 0.18, g: 0.8, b: 0.44, a: 0}
   glowColorBright: {r: 0.18, g: 0.8, b: 0.44, a: 0.22352941}
-  shineDuration: 0.5
+  shineDuration: 0.2
   shineWidth: 80
   shineColor: {r: 0.18, g: 0.8, b: 0.44, a: 1}
   shineOpacity: 0.5

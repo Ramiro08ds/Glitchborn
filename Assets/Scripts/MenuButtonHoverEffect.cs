@@ -26,8 +26,14 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
     public Sprite shineSprite;
 
     [Header("=== MOVIMIENTO ===")]
-    public float moveDistance = 10f;
-    public float moveSpeed = 10f;
+    [Tooltip("Distancia de desplazamiento")]
+    public float moveDistance = 15f;
+
+    [Tooltip("Duración del movimiento (debe ser igual a shineDuration)")]
+    public float moveDuration = 0.5f;
+
+    [Tooltip("Tipo de easing para el movimiento")]
+    public AnimationCurve moveEasing = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Header("=== COLORES DEL FONDO ===")]
     public Color backgroundNormal = new Color(0.1f, 0.1f, 0.1f, 0.8f);
@@ -54,7 +60,6 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
 
     private RectTransform buttonRect;
     private Vector2 originalPosition;
-    private Vector2 targetPosition;
 
     private GameObject shineContainer;
     private GameObject shineObject;
@@ -62,6 +67,7 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
     private RectTransform shineRect;
 
     private Coroutine currentAnimation;
+    private Coroutine moveCoroutine;
 
     void Start()
     {
@@ -82,7 +88,6 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
             buttonGlow = transform.Find("Glow")?.GetComponent<Image>();
 
         originalPosition = buttonRect.anchoredPosition;
-        targetPosition = originalPosition;
 
         // Estado inicial
         if (buttonBackground != null)
@@ -97,15 +102,6 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
         }
 
         CreateShine();
-    }
-
-    void Update()
-    {
-        buttonRect.anchoredPosition = Vector2.Lerp(
-            buttonRect.anchoredPosition,
-            targetPosition,
-            Time.deltaTime * moveSpeed
-        );
     }
 
     void CreateShine()
@@ -148,22 +144,56 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        targetPosition = originalPosition + new Vector2(moveDistance, 0);
-
+        // Detener animaciones anteriores
         if (currentAnimation != null)
             StopCoroutine(currentAnimation);
 
+        if (moveCoroutine != null)
+            StopCoroutine(moveCoroutine);
+
+        // Iniciar animación de hover y movimiento simultáneo
         currentAnimation = StartCoroutine(HoverIn());
+        moveCoroutine = StartCoroutine(SmoothMove(originalPosition + new Vector2(moveDistance, 0), moveDuration));
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        targetPosition = originalPosition;
-
+        // Detener animaciones anteriores
         if (currentAnimation != null)
             StopCoroutine(currentAnimation);
 
+        if (moveCoroutine != null)
+            StopCoroutine(moveCoroutine);
+
+        // Iniciar animación de hover out y movimiento simultáneo
         currentAnimation = StartCoroutine(HoverOut());
+        moveCoroutine = StartCoroutine(SmoothMove(originalPosition, moveDuration));
+    }
+
+    /// <summary>
+    /// Mueve el botón suavemente con easing
+    /// </summary>
+    IEnumerator SmoothMove(Vector2 targetPosition, float duration)
+    {
+        Vector2 startPosition = buttonRect.anchoredPosition;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            // Aplicar easing curve para movimiento suave
+            float easedT = moveEasing.Evaluate(t);
+
+            buttonRect.anchoredPosition = Vector2.Lerp(startPosition, targetPosition, easedT);
+
+            yield return null;
+        }
+
+        // Asegurar posición final
+        buttonRect.anchoredPosition = targetPosition;
+        moveCoroutine = null;
     }
 
     IEnumerator HoverIn()

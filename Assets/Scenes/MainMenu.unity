@@ -502,10 +502,10 @@ RectTransform:
   m_Father: {fileID: 1306197282}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.000015259, y: 0}
+  m_SizeDelta: {x: 396.04028, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &457754834
 MonoBehaviour:
@@ -553,8 +553,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -591,7 +591,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 3.5008256, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 457754834}
     characterCount: 5
@@ -1090,6 +1090,7 @@ GameObject:
   - component: {fileID: 1306197285}
   - component: {fileID: 1306197284}
   - component: {fileID: 1306197283}
+  - component: {fileID: 1306197286}
   m_Layer: 5
   m_Name: BotonJugador
   m_TagString: Untagged
@@ -1106,7 +1107,7 @@ RectTransform:
   m_GameObject: {fileID: 1306197281}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6675317, y: 1.0237118, z: 1.0237118}
+  m_LocalScale: {x: 1.023712, y: 1.0237118, z: 1.0237118}
   m_Children:
   - {fileID: 457754833}
   m_Father: {fileID: 1567797710}
@@ -1114,8 +1115,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -58.6, y: 168.2}
-  m_SizeDelta: {x: 516.44464, y: 96.833374}
+  m_AnchoredPosition: {x: -0.000015259, y: -0.000022888}
+  m_SizeDelta: {x: 450, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1306197283
 MonoBehaviour:
@@ -1137,10 +1138,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.029859383, g: 0.050430495, b: 0.5754717, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.5882353, g: 1, b: 0.7058824, a: 1}
+    m_PressedColor: {r: 0.19607843, g: 0.7058824, b: 0.3137255, a: 1}
+    m_DisabledColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -1181,7 +1182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9577252, g: 0.9583423, b: 0.9622642, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1203,6 +1204,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306197281}
   m_CullTransparentMesh: 0
+--- !u!114 &1306197286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306197281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37866946ef3fd4f4c9f50c63156ce04f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonRect: {fileID: 1306197282}
+  buttonImage: {fileID: 0}
+  iconImage: {fileID: 0}
+  moveDistance: 5
+  moveSpeed: 10
+  normalIconColor: {r: 0.18, g: 0.8, b: 0.44, a: 1}
+  hoverIconColor: {r: 1, g: 1, b: 1, a: 1}
+  shineColor: {r: 1, g: 1, b: 1, a: 0.2}
+  finalGlowColor: {r: 1, g: 1, b: 1, a: 0.3}
+  shineDuration: 0.5
+  fadeOutDuration: 0.3
+  shineLineWidth: 50
 --- !u!1 &1524003463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1538,5 +1563,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 100
-  topPosition: -100
+  topPosition: 30
   bottomPosition: -1200

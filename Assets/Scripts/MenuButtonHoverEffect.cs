@@ -104,12 +104,44 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
         CreateShine();
     }
 
+    void OnValidate()
+    {
+        // Actualizar color del shine cuando se cambia en el Inspector
+        if (Application.isPlaying && shineImage != null)
+        {
+            Color color = shineColor;
+            color.a = shineOpacity;
+            shineImage.color = color;
+        }
+
+        // Actualizar border color si está en estado normal
+        if (Application.isPlaying && buttonBorder != null && !IsHovered())
+        {
+            buttonBorder.color = borderNormal;
+        }
+    }
+
+    bool IsHovered()
+    {
+        return currentAnimation != null;
+    }
+
     void CreateShine()
     {
         if (buttonBackground == null) return;
 
+        // Crear nombre único para este botón
+        string uniqueName = "ShineContainer_" + gameObject.GetInstanceID();
+
+        // Verificar que no exista ya
+        Transform existingContainer = buttonBackground.transform.Find(uniqueName);
+        if (existingContainer != null)
+        {
+            DestroyImmediate(existingContainer.gameObject);
+        }
+
         // Contenedor con máscara
-        shineContainer = new GameObject("ShineContainer");
+        shineContainer = new GameObject(uniqueName);
         shineContainer.transform.SetParent(buttonBackground.transform, false);
 
         RectMask2D rectMask = shineContainer.AddComponent<RectMask2D>();
@@ -120,8 +152,8 @@ public class MenuButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPoint
         containerRect.offsetMin = Vector2.zero;
         containerRect.offsetMax = Vector2.zero;
 
-        // Shine dentro del contenedor
-        shineObject = new GameObject("Shine");
+        // Shine dentro del contenedor con nombre único
+        shineObject = new GameObject("Shine_" + gameObject.GetInstanceID());
         shineObject.transform.SetParent(shineContainer.transform, false);
 
         shineImage = shineObject.AddComponent<Image>();

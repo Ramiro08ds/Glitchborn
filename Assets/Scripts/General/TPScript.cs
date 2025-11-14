@@ -1,23 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TPScript : MonoBehaviour
 {
     [Header("Settings")]
     public LayerMask layerToTp;
     public Transform tpPos;
-    // Update is called once per frame
-    void OnTriggerEnter(Collider other)
+void OnTriggerEnter(Collider other)
+{
+    Debug.Log("Triggered TP");
+
+    // ¿Coincide el layer?
+    if (((1 << other.gameObject.layer) & layerToTp) != 0)
     {
-        Debug.Log("Triggered TP");
-        if (other.gameObject.layer == layerToTp)
-        {
-            Debug.Log("TPING player");
-            other.transform.position = tpPos.position;
-        } else
-        {
-            Debug.Log($"{other.gameObject.layer} was triggered");
-        }
+        Debug.Log("TPING player");
+
+        // Buscar el Player en los padres
+        Transform root = other.transform.root;
+
+        CharacterController controller = root.GetComponent<CharacterController>();
+        if (controller != null) controller.enabled = false;
+
+        root.position = tpPos.position;
+
+        if (controller != null) controller.enabled = true;
     }
+}
+
 }

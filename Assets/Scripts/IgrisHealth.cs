@@ -1,87 +1,57 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class IgrisHealth : MonoBehaviour
 {
-    public int baseEnemyHealth = 100;
-    private int currentHealth;
-    private bool isDead = false;
-    private bool isStunned = false;
-    private bool hasPlayedStun = false;
+    public int maxHealth = 300;
+    public int currentHealth;
 
-    private IgrisMovement movementScript;
+    public bool isDead = false;
+    public bool isStunned = false;
+
     private EnemyAnimatorController animatorController;
+    private IgrisMovement movement;
+    private IgrisAttack attack;
 
     void Start()
     {
-        currentHealth = baseEnemyHealth * 15;
-        movementScript = GetComponent<IgrisMovement>();
+        currentHealth = maxHealth;
         animatorController = GetComponent<EnemyAnimatorController>();
+        movement = GetComponent<IgrisMovement>();
+        attack = GetComponent<IgrisAttack>();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int dmg)
     {
         if (isDead) return;
 
-        currentHealth -= damage;
+        currentHealth -= dmg;
 
-        if (!hasPlayedStun && currentHealth <= baseEnemyHealth * 15 * 0.75f)
+        if (currentHealth <= 0)
         {
-            hasPlayedStun = true;
-            StartCoroutine(TriggerStun());
+            Die();
+            return;
         }
 
-        if (currentHealth <= 0) Die();
+        // Stun corto
+        isStunned = true;
+        movement.SetStunned(true);
+        Invoke("RecoverFromStun", 1.2f);
     }
 
-    IEnumerator TriggerStun()
+    void RecoverFromStun()
     {
-        isStunned = true;
-        movementScript.SetStunned(true);
-        yield return new WaitForSeconds(4f);
-        movementScript.SetStunned(false);
+        if (isDead) return;
         isStunned = false;
+        movement.SetStunned(false);
     }
 
     void Die()
     {
-        if (isDead) return;
         isDead = true;
 
-        movementScript.SetStunned(true);
         animatorController.PlayDeath();
+        movement.SetStunned(true);
 
-        StartCoroutine(DeathFade());
+        Destroy(gameObject, 4f);
     }
-
-    IEnumerator DeathFade()
-    {
-        yield return new WaitForSeconds(5f); // esperar animación de muerte
-
-        Renderer[] rends = GetComponentsInChildren<Renderer>();
-        float fadeDuration = 2f;
-        float t = 0f;
-
-        while (t < fadeDuration)
-        {
-            t += Time.deltaTime;
-            foreach (Renderer r in rends)
-            {
-                foreach (Material m in r.materials)
-                {
-                    if (m.HasProperty("_Color"))
-                    {
-                        Color c = m.color;
-                        c.a = Mathf.Lerp(1f, 0f, t / fadeDuration);
-                        m.color = c;
-                    }
-                }
-            }
-            yield return null;
-        }
-
-        Destroy(gameObject);
-    }
-
-    public bool IsStunned() => isStunned;
 }

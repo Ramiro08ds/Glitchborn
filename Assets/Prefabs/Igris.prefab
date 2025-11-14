@@ -86,6 +86,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b0a2510853ff9c45b035c463f9432e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &917681599
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753051050127280750}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 78f495340f1c02e4da4f9c2ca3c3122c, type: 3}
+  m_Controller: {fileID: 9100000, guid: c619721abb5162c41a51d3a10ac57e57, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8682494089778206789
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,6 +121,7 @@ GameObject:
   - component: {fileID: 5226312150068513838}
   - component: {fileID: 1940080554213724941}
   - component: {fileID: 1940080554213724927}
+  - component: {fileID: 1361454232}
   m_Layer: 9
   m_Name: Igris
   m_TagString: Boss
@@ -174,8 +194,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13aed14baf73969488106f9bf8b9fae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseEnemyHealth: 100
-  animator: {fileID: 1940080554213724941}
+  maxHealth: 200
+  currentHealth: 0
+  isDead: 0
+  isStunned: 0
 --- !u!114 &7189993820759994981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,16 +210,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623cdb16a5c561e45ac8d67adecff43c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalDamage: 12
-  strongDamage: 20
-  attackRange: 3
-  attackCooldown: 2
-  attackPoint: {fileID: 1991538633}
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 1024
   animator: {fileID: 1940080554213724941}
-  movementScript: {fileID: 5226312150068513838}
+  agent: {fileID: 2654485452038110134}
+  player: {fileID: 0}
+  swordHitbox: {fileID: 3276309072553871611}
+  detectionRange: 20
+  attackRange: 4
+  attackCooldown: 4
 --- !u!114 &5226312150068513838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,10 +230,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  throne: {fileID: 0}
   detectionRange: 20
-  stoppingDistance: 2.5
-  standUpDuration: 2
+  attackRange: 3
 --- !u!95 &1940080554213724941
 Animator:
   serializedVersion: 3
@@ -248,6 +265,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 0}
+--- !u!114 &1361454232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682494089778206789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cf1ff97061168e42adae672bf8ac59d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1451401697558242345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -583,6 +612,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 9500000, guid: 78f495340f1c02e4da4f9c2ca3c3122c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 78f495340f1c02e4da4f9c2ca3c3122c, type: 3}
+--- !u!1 &4753051050127280750 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100002, guid: 78f495340f1c02e4da4f9c2ca3c3122c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4753051050127379660}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4753051050127513166 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 78f495340f1c02e4da4f9c2ca3c3122c,

@@ -1,86 +1,67 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 
 public class IgrisAttack : MonoBehaviour
 {
-    public int normalDamage = 12;
-    public int strongDamage = 20;
-    public float attackRange = 2.5f;
+    [Header("References")]
+    public Animator animator;
+    public NavMeshAgent agent;
+    public Transform player;
+    public IgrisSwordHitbox swordHitbox;
+
+    [Header("Attack Settings")]
+    public float detectionRange = 8f;
+    public float attackRange = 3f;
     public float attackCooldown = 2f;
 
-    public Transform attackPoint;
-    public LayerMask playerLayer;
-
-    private EnemyAnimatorController animatorController;
-    private IgrisMovement movementScript;
-    private bool canAttack = true;
-    private int attackCount = 0;
-    private bool playerInRange = false;
-
-    void Start()
-    {
-        animatorController = GetComponent<EnemyAnimatorController>();
-        movementScript = GetComponent<IgrisMovement>();
-
-        if (attackPoint == null)
-        {
-            GameObject point = new GameObject("AttackPoint");
-            point.transform.SetParent(transform);
-            point.transform.localPosition = new Vector3(0, 1.5f, 1.5f);
-            attackPoint = point.transform;
-        }
-    }
+    private float lastAttackTime;
+    private bool isAttacking = false;
 
     void Update()
     {
-        if (movementScript.IsSitting || movementScript.IsStunned || !canAttack) return;
-        if (movementScript == null || animatorController == null) return;
+        if (player == null) return;
 
-        Transform target = movementScript.target;
-        if (target == null) return;
+        float distance = Vector3.Distance(transform.position, player.position);
 
-        float distance = Vector3.Distance(transform.position, target.position);
-        playerInRange = distance <= attackRange;
+        // Movimiento
+        bool shouldMove = distance <= detectionRange && distance > attackRange;
+        animator.SetBool("IsMoving", shouldMove);
+        agent.isStopped = !shouldMove;
 
-        if (playerInRange && canAttack)
+        // Ataque
+        if (distance <= attackRange && Time.time - lastAttackTime >= attackCooldown)
         {
-            StartCoroutine(PerformAttack());
+            StartCoroutine(DoAttack());
+            lastAttackTime = Time.time;
         }
     }
 
-    public bool IsPlayerInRange() => playerInRange;
-
-    IEnumerator PerformAttack()
+    private IEnumerator DoAttack()
     {
-        canAttack = false;
-        attackCount++;
+        if (isAttacking) yield break;
+        isAttacking = true;
 
-        movementScript.agent.isStopped = true;
+        // Elegir ataque aleatorio
+        int random = Random.Range(0, 10); // 0–9
+        bool strongAttack = random < 3;   // 30% fuerte, 70% normal
 
-        if (attackCount % 3 == 0)
-            animatorController.PlayAttackStrong();
+        if (strongAttack)
+            animator.SetTrigger("AttackStrong");
         else
-            animatorController.PlayAttackNormal();
+            animator.SetTrigger("AttackNormal");
 
-        yield return new WaitForSeconds(0.5f); // momento del impacto
+        // Tiempo antes de golpear (ajustable)
+        yield return new WaitForSeconds(0.45f); 
+        swordHitbox.EnableHitbox();
 
-        Collider[] hitPlayers = Physics.OverlapSphere(attackPoint.position, attackRange, playerLayer);
-        foreach (Collider player in hitPlayers)
-        {
-            PlayerHealthManager health = player.GetComponent<PlayerHealthManager>();
-            if (health != null)
-                health.TakeDamage(attackCount % 3 == 0 ? strongDamage : normalDamage);
-        }
+        // Duración del golpe (ajustable)
+        yield return new WaitForSeconds(0.55f); 
+        swordHitbox.DisableHitbox();
 
-        yield return new WaitForSeconds(attackCooldown);
-        canAttack = true;
-        movementScript.agent.isStopped = false;
-    }
+        // Pequeña pausa antes de volver a atacar
+        yield return new WaitForSeconds(0.2f);
 
-    void OnDrawGizmosSelected()
-    {
-        if (attackPoint == null) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        isAttacking = false;
     }
 }

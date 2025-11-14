@@ -847,7 +847,7 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: -216, y: -72, z: 0}
+  m_AnyStatePosition: {x: -228, y: -108, z: 0}
   m_EntryPosition: {x: 156, y: 468, z: 0}
   m_ExitPosition: {x: 840, y: -48, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}

@@ -468,6 +468,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60896745}
   m_CullTransparentMesh: 0
+--- !u!1 &74132377 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7273122541570269304, guid: 726b807f04e27d74fb42c06a03cdb1ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 7273122540877359716}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &74132378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74132377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b00195eb3c221e40be1aa2712c1d1bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  boxSize: {x: 0.6, y: 0.2, z: 1}
+  localCenter: {x: 0, y: 0, z: 0}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  checkInterval: 0
+  knockbackForce: 2
 --- !u!1 &78829955
 GameObject:
   m_ObjectHideFlags: 0
@@ -8013,26 +8039,21 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 189725601}
-    - target: {fileID: 7093094880812124226, guid: 59d537dd8014f3b41aedbb1a405ff955,
-        type: 3}
-      propertyPath: isStunned
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7093094880812124226, guid: 59d537dd8014f3b41aedbb1a405ff955,
-        type: 3}
-      propertyPath: isDead
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7093094880812124226, guid: 59d537dd8014f3b41aedbb1a405ff955,
-        type: 3}
-      propertyPath: currentHealth
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 7189993820759994981, guid: 59d537dd8014f3b41aedbb1a405ff955,
         type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 189725601}
+    - target: {fileID: 6371142404929739087, guid: 59d537dd8014f3b41aedbb1a405ff955,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6371142404929739087, guid: 59d537dd8014f3b41aedbb1a405ff955,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59d537dd8014f3b41aedbb1a405ff955, type: 3}
 --- !u!1 &1756219154

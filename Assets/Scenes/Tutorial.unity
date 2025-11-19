@@ -8039,6 +8039,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 189725601}
+    - target: {fileID: 5226312150068513838, guid: 59d537dd8014f3b41aedbb1a405ff955,
+        type: 3}
+      propertyPath: detectionRange
+      value: 25.94
+      objectReference: {fileID: 0}
     - target: {fileID: 7189993820759994981, guid: 59d537dd8014f3b41aedbb1a405ff955,
         type: 3}
       propertyPath: player
@@ -8053,6 +8058,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5522709829814901837, guid: 59d537dd8014f3b41aedbb1a405ff955,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 534669904}
+    - target: {fileID: 5522709829814901837, guid: 59d537dd8014f3b41aedbb1a405ff955,
+        type: 3}
+      propertyPath: offset.y
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59d537dd8014f3b41aedbb1a405ff955, type: 3}
@@ -9703,6 +9718,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7273122541570269304, guid: 726b807f04e27d74fb42c06a03cdb1ad,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7273122541058609604, guid: 726b807f04e27d74fb42c06a03cdb1ad,
         type: 3}
       propertyPath: healthBar
@@ -10052,11 +10072,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.168
-      objectReference: {fileID: 0}
-    - target: {fileID: 7273122541570269304, guid: 726b807f04e27d74fb42c06a03cdb1ad,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 726b807f04e27d74fb42c06a03cdb1ad, type: 3}

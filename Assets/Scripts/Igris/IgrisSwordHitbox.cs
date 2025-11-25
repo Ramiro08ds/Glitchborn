@@ -4,11 +4,15 @@ public class IgrisSwordHitbox : MonoBehaviour
 {
     private int damage = 10;
     private Collider col;
+    private IgrisHealth igrisHealth; // NUEVO
 
     private void Awake()
     {
         col = GetComponent<Collider>();
-        col.enabled = false; // IMPORTANTÍSIMO
+        col.enabled = false;
+
+        // Obtener la salud para saber si está stuneado
+        igrisHealth = GetComponentInParent<IgrisHealth>();
     }
 
     public void EnableHitbox()
@@ -28,7 +32,11 @@ public class IgrisSwordHitbox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!col.enabled) return; // seguridad
+        if (!col.enabled) return;
+
+        // 🚫 NUEVO: No hace daño si está stuneado o muerto
+        if (igrisHealth != null && (igrisHealth.isStunned || igrisHealth.isDead))
+            return;
 
         if (other.CompareTag("Player"))
         {

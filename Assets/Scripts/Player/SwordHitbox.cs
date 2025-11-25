@@ -18,7 +18,6 @@ public class SwordHitbox : MonoBehaviour
     public float knockbackForce = 2f;
 
     private Collider col;
-    // Cambié a HashSet<int> para permitir registrar cualquier enemigo (instanceID)
     private HashSet<int> damagedThisSwing = new HashSet<int>();
     private bool isActive = false;
     private Coroutine activeRoutine;
@@ -101,43 +100,39 @@ public class SwordHitbox : MonoBehaviour
     {
         if (owner == null) return;
 
-        // Intentar obtener EnemyHealth
+        // 1) Detectar enemigos normales
         EnemyHealth eh = other.GetComponentInParent<EnemyHealth>();
 
-        // Si no hay EnemyHealth, intentar con IgrisHealth
-        IgrisHealth ih = null;
-        if (eh == null)
-            ih = other.GetComponentInParent<IgrisHealth>();
+        // 2) Detectar a Igris
+        IgrisHealth igris = other.GetComponentInParent<IgrisHealth>();
 
-        // Si no es ninguno de los dos, no es un objetivo válido
-        if (eh == null && ih == null) return;
+        // Si no es ni enemigo normal ni Igris → ignorar
+        if (eh == null && igris == null) return;
 
-        // Identificador único para evitar doble golpe cada swing
-        int uniqueId = (eh != null) ? eh.GetInstanceID() : ih.GetInstanceID();
+        // Obtener ID único de la entidad (sirve para ambos tipos)
+        int id = (eh != null) ? eh.GetInstanceID() : igris.GetInstanceID();
 
-        if (damagedThisSwing.Contains(uniqueId)) return;
+        if (damagedThisSwing.Contains(id)) return;
 
-        // Knockback seguro usando NavMeshAgent (se pasa el transform)
-        Transform enemyTransform = (eh != null) ? eh.transform : ih.transform;
-        ApplyKnockback(enemyTransform);
+        // Knockback (funciona igual para Igris)
+        Transform targetTransform = (eh != null) ? eh.transform : igris.transform;
+        ApplyKnockback(targetTransform);
 
-        // Daño según fuerza del jugador
+        // Daño
         int damage = owner.GetDamage();
+
         if (eh != null) eh.TakeDamage(damage);
-        if (ih != null) ih.TakeDamage(damage);
+        if (igris != null) igris.TakeDamage(damage);
 
-        // Reproducir sonido de golpe usando AudioManager (si existe)
+        // Sonido
         if (AudioManager.instance != null)
-        {
             AudioManager.instance.SonidoPlayerGolpeaEnemigo();
-        }
 
-        // Feedback de daño del jugador (si existe)
+        // Feedback
         if (PlayerHitFeedback.instance != null)
             PlayerHitFeedback.instance.OnPlayerDamaged();
 
-        damagedThisSwing.Add(uniqueId);
-        Debug.Log($"Golpeado {(eh != null ? eh.name : ih.name)} por {damage} de daño");
+        damagedThisSwing.Add(id);
     }
 
     void ApplyKnockback(Transform enemyTransform)
@@ -162,23 +157,15 @@ public class SwordHitbox : MonoBehaviour
 
         while (elapsed < duration)
         {
-            if (agent == null)
-            {
-                yield break;
-            }
+            if (agent == null) yield break;
 
             Vector3 newPos = Vector3.Lerp(start, targetPos, elapsed / duration);
-            // Mantengo la misma aproximación de desplazamiento lineal.
-            // Uso agent.Warp al final para garantizar que el NavMeshAgent termine en la posición objetivo.
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // Al final del movimiento intento ubicar al agente en la posición final de forma segura
         if (agent != null && agent.isOnNavMesh)
-        {
             agent.Warp(targetPos);
-        }
     }
 
     void OnDrawGizmosSelected()

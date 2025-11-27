@@ -24,6 +24,9 @@ public class EnemyAnimatorController : MonoBehaviour
         animator.SetBool("IsSitting", movement.IsSitting);
         animator.SetBool("IsStunned", health.isStunned);
         animator.SetBool("PlayerInRange", movement.PlayerInRange);
+
+        // DEBUG: ver valor real en cada frame (comentar si spam)
+        // Debug.Log($"[AnimCtrl] IsStunned param = {animator.GetBool(\"IsStunned\")}");
     }
 
     public void PlayAttackNormal()
@@ -44,5 +47,37 @@ public class EnemyAnimatorController : MonoBehaviour
     public void PlayDeath()
     {
         animator.SetTrigger("Die");
+    }
+
+    // Fallback: forzar entrada a Stun si por alguna razón la transición no ocurre.
+    // Requiere que tengas un estado en el Animator llamado EXACTAMENTE "Stun" (cambiar si es otro nombre).
+    public void ForceEnterStun()
+    {
+        if (animator == null) return;
+
+        Debug.Log("[AnimCtrl] ForceEnterStun() called — seteando param IsStunned = true");
+        animator.SetBool("IsStunned", true);
+
+        // Intenta forzar el state directamente (fallback). REVISAR: el nombre del state debe ser EXACTO.
+        // Si tu estado se llama distinto, cambialo por el nombre correcto.
+        try
+        {
+            animator.Play("Stun");
+            Debug.Log("[AnimCtrl] animator.Play(\"Stun\") ejecutado como fallback.");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[AnimCtrl] animator.Play(\"Stun\") falló: " + ex.Message);
+        }
+    }
+
+    public void ForceExitStun()
+    {
+        if (animator == null) return;
+
+        Debug.Log("[AnimCtrl] ForceExitStun() called — seteando param IsStunned = false");
+        animator.SetBool("IsStunned", false);
+
+        // No forzamos otro estado aquí; el Animator debería transicionar según sus reglas.
     }
 }

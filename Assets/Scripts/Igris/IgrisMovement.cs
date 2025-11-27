@@ -45,7 +45,12 @@ public class IgrisMovement : MonoBehaviour
             return;
         }
 
-        if (IsStunned) return;
+        if (IsStunned)
+        {
+            agent.isStopped = true;
+            IsMoving = false;
+            return;
+        }
 
         agent.SetDestination(target.position);
         agent.isStopped = false;
@@ -70,5 +75,7 @@ public class IgrisMovement : MonoBehaviour
         IsStunned = state;
         agent.isStopped = state;
         IsMoving = !state;
+
+        Debug.Log("MOVEMENT: Stunned = " + state);
     }
 }

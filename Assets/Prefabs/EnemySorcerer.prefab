@@ -94,8 +94,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
@@ -370,8 +368,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f20f55fd6a5a8a419e44fb21be6000b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  xpReward: 1
+  maxHealth: 15
+  xpReward: 2
   healOnKill: 15
   healthBar: {fileID: 7990976101181617351}
   player: {fileID: 0}
@@ -477,8 +475,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 3
   m_PreserveAspect: 0
@@ -572,8 +568,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!64 &7336134535776196171
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -637,15 +631,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7783495351106183657}
     m_Modifications:
+    - target: {fileID: 100000, guid: bddb67d1043b8bd46a7e6f0902e018a4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: bddb67d1043b8bd46a7e6f0902e018a4, type: 3}
       propertyPath: m_Name
       value: ModeloEnemigoParaUnityInicial
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: bddb67d1043b8bd46a7e6f0902e018a4, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: bddb67d1043b8bd46a7e6f0902e018a4, type: 3}
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}

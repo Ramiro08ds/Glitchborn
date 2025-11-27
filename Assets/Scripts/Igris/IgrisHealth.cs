@@ -13,17 +13,17 @@ public class IgrisHealth : MonoBehaviour
     private IgrisMovement movement;
     private IgrisAttack attack;
 
-    // Golpes consecutivos
     private int consecutiveHits = 0;
     public float hitResetTime = 1f;
     private float lastHitTime;
 
-    // Feedback de daño
     public Renderer[] allRenderers;
     public Color hitColor = Color.red;
     public float flashDuration = 0.1f;
 
     public EnemyHealthBar healthBar;
+
+    public float stunDuration = 1.2f;
 
     void Start()
     {
@@ -42,16 +42,12 @@ public class IgrisHealth : MonoBehaviour
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
         }
 
-        // Obtener TODOS los renderers del boss (importante)
         allRenderers = GetComponentsInChildren<Renderer>();
     }
 
     public void TakeDamage(int dmg)
     {
         if (isDead) return;
-
-        // A veces el NavMeshAgent lo mueve y se buguea el frame
-        StartCoroutine(ForceNavmeshSync());
 
         currentHealth -= dmg;
 
@@ -60,15 +56,16 @@ public class IgrisHealth : MonoBehaviour
 
         StartCoroutine(DamageFlash());
 
-        // Reset de golpes
+        // Reset hits
         if (Time.time - lastHitTime > hitResetTime)
             consecutiveHits = 0;
 
         consecutiveHits++;
         lastHitTime = Time.time;
 
-        // Stun cada 2 golpes
-        if (consecutiveHits >= 2)
+        Debug.Log("IGRIS HIT. Count = " + consecutiveHits);
+
+        if (consecutiveHits >= 3)
         {
             consecutiveHits = 0;
             Stun();
@@ -81,64 +78,48 @@ public class IgrisHealth : MonoBehaviour
         }
     }
 
-    IEnumerator ForceNavmeshSync()
-    {
-        // Evita que el agente quede "fuera del overlapbox"
-        yield return new WaitForEndOfFrame();
-
-        var agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (agent != null && agent.isOnNavMesh)
-        {
-            agent.Warp(transform.position);
-        }
-    }
-
     void Stun()
     {
+        if (isDead) return;
+
+        Debug.Log("IGRIS STUNNED!");
+
         isStunned = true;
         movement.SetStunned(true);
-        Invoke("RecoverFromStun", 1.2f);
-    }
 
-    IEnumerator DamageFlash()
-    {
-        if (allRenderers == null || allRenderers.Length == 0)
-            yield break;
+        if (attack != null)
+            attack.enabled = false;
 
-        // Guardar materiales originales
-        Color[] originalColors = new Color[allRenderers.Length];
-
-        for (int i = 0; i < allRenderers.Length; i++)
-        {
-            if (allRenderers[i].material.HasProperty("_Color"))
-                originalColors[i] = allRenderers[i].material.color;
-
-            allRenderers[i].material.color = hitColor;
-        }
-
-        yield return new WaitForSeconds(flashDuration);
-
-        for (int i = 0; i < allRenderers.Length; i++)
-        {
-            if (allRenderers[i].material.HasProperty("_Color"))
-                allRenderers[i].material.color = originalColors[i];
-        }
+        Invoke(nameof(RecoverFromStun), stunDuration);
     }
 
     void RecoverFromStun()
     {
         if (isDead) return;
+
+        Debug.Log("IGRIS RECOVERED");
+
         isStunned = false;
         movement.SetStunned(false);
+
+        if (attack != null)
+            attack.enabled = true;
     }
 
     void Die()
     {
         isDead = true;
 
-        animatorController.PlayDeath();
+        if (animatorController != null)
+            animatorController.PlayDeath();
+
         movement.SetStunned(true);
 
         Destroy(gameObject, 4f);
+    }
+
+    IEnumerator DamageFlash()
+    {
+        yield break;
     }
 }

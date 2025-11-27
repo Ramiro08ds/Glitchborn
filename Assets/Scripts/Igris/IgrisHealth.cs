@@ -1,34 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class IgrisHealth : MonoBehaviour
 {
     public int maxHealth = 300;
     public int currentHealth;
-
     public bool isDead = false;
     public bool isStunned = false;
-
     private EnemyAnimatorController animatorController;
     private IgrisMovement movement;
     private IgrisAttack attack;
-
     private int consecutiveHits = 0;
     public float hitResetTime = 1f;
     private float lastHitTime;
-
     public Renderer[] allRenderers;
     public Color hitColor = Color.red;
     public float flashDuration = 0.1f;
-
     public EnemyHealthBar healthBar;
-
     public float stunDuration = 1.2f;
+
+    [Header("=== RETURN TO MENU ===")]
+    public float delayBeforeMainMenu = 4f;
+    public string mainMenuSceneName = "MainMenu";
 
     void Start()
     {
         currentHealth = maxHealth;
-
         animatorController = GetComponent<EnemyAnimatorController>();
         movement = GetComponent<IgrisMovement>();
         attack = GetComponent<IgrisAttack>();
@@ -56,7 +54,6 @@ public class IgrisHealth : MonoBehaviour
 
         StartCoroutine(DamageFlash());
 
-        // Reset hits
         if (Time.time - lastHitTime > hitResetTime)
             consecutiveHits = 0;
 
@@ -83,7 +80,6 @@ public class IgrisHealth : MonoBehaviour
         if (isDead) return;
 
         Debug.Log("IGRIS STUNNED!");
-
         isStunned = true;
         movement.SetStunned(true);
 
@@ -98,7 +94,6 @@ public class IgrisHealth : MonoBehaviour
         if (isDead) return;
 
         Debug.Log("IGRIS RECOVERED");
-
         isStunned = false;
         movement.SetStunned(false);
 
@@ -115,7 +110,23 @@ public class IgrisHealth : MonoBehaviour
 
         movement.SetStunned(true);
 
-        Destroy(gameObject, 4f);
+        Debug.Log("¡Jefe derrotado! Volviendo al menú en " + delayBeforeMainMenu + " segundos...");
+
+        // Iniciar coroutine que destruye Y carga escena
+        StartCoroutine(DieSequence());
+    }
+
+    IEnumerator DieSequence()
+    {
+        // Esperar delay
+        yield return new WaitForSeconds(delayBeforeMainMenu);
+
+        Debug.Log("Cargando MainMenu...");
+
+        // Cargar escena
+        SceneManager.LoadScene(mainMenuSceneName);
+
+        // Nota: No hace falta Destroy porque la escena se va a cambiar
     }
 
     IEnumerator DamageFlash()

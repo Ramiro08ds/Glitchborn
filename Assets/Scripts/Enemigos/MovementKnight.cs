@@ -2,7 +2,7 @@
 using UnityEngine.AI;
 using System.Collections;
 
-public class EnemyMovement : MonoBehaviour
+public class MovementKnight : MonoBehaviour
 {
     public Transform destino; // El Player como target
     private NavMeshAgent agente;

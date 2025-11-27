@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +10,7 @@ public class AttackRanged : MonoBehaviour
     public Transform firePoint;
     private NavMeshAgent agent;
     private LineRenderer lineRenderer;
+    private EnemyMovement enemyMovement;
 
     [Header("Stats")]
     public float attackRange = 10f;
@@ -25,6 +25,7 @@ public class AttackRanged : MonoBehaviour
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        enemyMovement = GetComponent<EnemyMovement>();
 
         if (agent == null)
         {
@@ -34,7 +35,7 @@ public class AttackRanged : MonoBehaviour
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        // Crear y configurar el LineRenderer
+        // Crear y configurar lineRenderer
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         lineRenderer.startWidth = telegraphWidth;
@@ -50,22 +51,33 @@ public class AttackRanged : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
+        // ESTÁ FUERA DEL RANGO → perseguir
         if (distance > attackRange)
         {
             agent.isStopped = false;
             agent.SetDestination(player.position);
-            lineRenderer.enabled = false;
-        }
-        else
-        {
-            agent.isStopped = true;
-            transform.LookAt(player.position);
 
-            if (Time.time >= lastAttackTime + attackCooldown)
-            {
-                StartCoroutine(TelegraphAndShoot());
-                lastAttackTime = Time.time;
-            }
+            // Si está volando → animación de mover el cuerpo
+            if (enemyMovement != null && enemyMovement.isFlying)
+                enemyMovement.cuerpoAnimator.SetBool("isMoving", true);
+
+            lineRenderer.enabled = false;
+            return;
+        }
+
+        // ESTÁ EN RANGO → atacar
+        agent.isStopped = true;
+        transform.LookAt(player.position);
+
+        // Dejar de mover el cuerpo al atacar
+        if (enemyMovement != null && enemyMovement.isFlying)
+            enemyMovement.cuerpoAnimator.SetBool("isMoving", false);
+
+        // Atacar si pasó el cooldown
+        if (Time.time >= lastAttackTime + attackCooldown)
+        {
+            StartCoroutine(TelegraphAndShoot());
+            lastAttackTime = Time.time;
         }
     }
 
@@ -83,7 +95,7 @@ public class AttackRanged : MonoBehaviour
                 yield break;
         }
 
-        // Mostrar línea roja
+        // Mostrar línea de telegrafía
         lineRenderer.enabled = true;
 
         float elapsed = 0f;
@@ -101,9 +113,16 @@ public class AttackRanged : MonoBehaviour
 
     private void Shoot()
     {
+        // Animación de ataque del cuerpo
+        if (enemyMovement != null)
+        {
+            enemyMovement.cuerpoAnimator.SetTrigger("Attack");
+            // Las alas siguen con MovAlas automáticamente, no se tocan
+        }
+
         if (projectilePrefab == null || firePoint == null || player == null) return;
 
-        // NUEVO: Reproducir sonido de disparo AQUÍ
+        // Sonido de disparo (si lo tenés configurado)
         if (AudioManager.instance != null)
             AudioManager.instance.SonidoEnemyShoot(firePoint.position);
 
@@ -118,6 +137,7 @@ public class AttackRanged : MonoBehaviour
         if (projLayer != -1)
             projectile.layer = projLayer;
 
+        // Evitar que choque con el propio enemigo
         Collider projectileCollider = projectile.GetComponent<Collider>();
         Collider[] enemyColliders = GetComponentsInChildren<Collider>();
         if (projectileCollider != null)
@@ -126,6 +146,7 @@ public class AttackRanged : MonoBehaviour
                 Physics.IgnoreCollision(projectileCollider, col, true);
         }
 
+        // Lanzar proyectil
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -133,10 +154,6 @@ public class AttackRanged : MonoBehaviour
             rb.constraints = RigidbodyConstraints.None;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.velocity = direction * projectileSpeed;
-        }
-        else
-        {
-            Debug.LogWarning("[AttackRanged] Projectile no tiene Rigidbody!", this);
         }
 
         Destroy(projectile, 5f);
